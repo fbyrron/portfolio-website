@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience & Leadership - Ernest Byrron Flores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    
+    <main>
+        <section id="all-projects" class="experience-list">
+            <h1>Experience & Leadership</h1>
+            <p class="section-subtitle">My professional journey and leadership roles</p>
+            
+            <div class="experience-images-section">
+                <h3>Gallery</h3>
+                <div class="experience-images-grid">
+                    <img src="assets/images/experience/infor-software.jpg" alt="Software Engineer at Infor">
+                    <img src="assets/images/experience/infor-qa.jpg" alt="QA Engineer Intern">
+                    <img src="assets/images/experience/aws-cloud.jpg" alt="AWS Cloud Club">
+                    <img src="assets/images/experience/gdsc-cto.jpg" alt="GDSC CTO">
+                    <img src="assets/images/experience/gdsc-lead.jpg" alt="GDSC Lead">
+                </div>
+            </div>
+            
+            <div class="project-grid">
+                <div class="project-card" onclick="openExperienceModal('infor-software')">
+                    <div class="project-content">
+                        <div class="project-number">01</div>
+                        <div class="experience-year">2025</div>
+                        <h3>Software Engineer</h3>
+                        <p>Infor</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openExperienceModal('infor-qa')">
+                    <div class="project-content">
+                        <div class="project-number">02</div>
+                        <div class="experience-year">2025</div>
+                        <h3>QA Engineer Intern</h3>
+                        <p>Infor</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openExperienceModal('freelance')">
+                    <div class="project-content">
+                        <div class="project-number">03</div>
+                        <h3>Freelance Developer</h3>
+                        <p>Self-Employed</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openExperienceModal('aws-coo')">
+                    <div class="project-content">
+                        <div class="project-number">04</div>
+                        <div class="experience-year">2024</div>
+                        <h3>Chief Operations Officer</h3>
+                        <p>AWS Cloud Club NU Baliwag</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openExperienceModal('gdsc-cto')">
+                    <div class="project-content">
+                        <div class="project-number">05</div>
+                        <div class="experience-year">2023</div>
+                        <h3>Chief Technology Officer</h3>
+                        <p>Google Developer Student Club NU Baliwag</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openExperienceModal('gdsc-lead')">
+                    <div class="project-content">
+                        <div class="project-number">06</div>
+                        <div class="experience-year">2022</div>
+                        <h3>Software Development Lead</h3>
+                        <p>Google Developer Student Club NU Baliwag</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="back-home-container">
+                <a href="index.html#leadership" class="cta-button-outline">← Back to Home</a>
+            </div>
+        </section>
+    </main>
+
+    <div id="experience-modal" class="modal">
+        <div class="modal-content project-modal-content">
+            <span class="close-modal" onclick="closeExperienceModal()">&times;</span>
+            <div id="experience-modal-body">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Ernest Byrron Flores. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

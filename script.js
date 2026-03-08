@@ -111,10 +111,41 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Mobile menu toggle
+function initMobileMenu() {
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const nav = document.querySelector('nav');
+    
+    if (menuToggle && nav) {
+        menuToggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+        
+        // Close menu when clicking on a link
+        const navLinks = nav.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+                menuToggle.classList.remove('active');
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+                nav.classList.remove('active');
+                menuToggle.classList.remove('active');
+            }
+        });
+    }
+}
+
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     animateParticles();
+    initMobileMenu();
 
     // Typewriter effect
     const text = "Hello! I Am Ernest Byrron Flores";
@@ -266,3 +297,259 @@ function drawCursorTrail() {
 }
 
 drawCursorTrail();
+
+// Project Modal
+const projectData = {
+    ecommunity: {
+        title: "Ecommunity.ph",
+        image: "assets/images/projects/ecommunity.jpg",
+        description: "A mobile-based solid waste management system for Baliwag, aimed at empowering residents, local government, and businesses to engage in sustainable practices. Implemented modules for garbage collection schedules, junkshop transactions, and waste segregation, alongside an educational blogspot that enhanced awareness of solid waste management.",
+        youtubeLink: "https://youtube.com/watch?v=MZWhS6y7qc0",
+        technologies: ["Flutter", "Firebase", "Dart"]
+    },
+    project2: {
+        title: "iNUvation Voting System",
+        images: ["assets/images/projects/inuvation1.jpg", "assets/images/projects/inuvation2.jpg"],
+        description: "A digital voting platform used by the students of National University – Baliwag to securely cast their votes for the iNUvation event. The system is deployed as both a web application for students and a desktop application for administrators, ensuring a convenient and user‑friendly voting experience. It also includes an admin panel that automatically tallies votes in real time and instantly determines the event winner.",
+        technologies: ["React", "Flutter", "Dart", "Firebase", "C#", "HTML"]
+    },
+    project3: {
+        title: "HydroGrowth",
+        image: "assets/images/projects/hydrogrowth.jpg",
+        description: "A real-time hydroponic farming monitoring app that connects directly to hardware sensors. The application displays essential environmental parameters such as pH value, water temperature, nutrient concentration, and water level. By providing live data and recommended ranges, the app helps users maintain healthy and sustainable hydroponic systems.",
+        technologies: ["Java", "Firebase"]
+    },
+    project4: {
+        title: "Medicine Vending Machine",
+        images: ["assets/images/projects/medicine-vending1.jpg", "assets/images/projects/medicine-vending2.jpg"],
+        description: "A kiosk‑based medicine vending system that allows users to order medicines through a touchscreen kiosk and pay using online payment methods via PayMongo. After a successful payment, the system sends the order details to the connected vending machine hardware, which automatically dispenses the selected medicine.",
+        technologies: ["Flutter", "Dart", "Firebase"]
+    },
+    project5: {
+        title: "Bldg126",
+        image: "assets/images/projects/bldg126.jpg",
+        description: "A minimalist, aesthetic website for a creative company that produces visual work and graphic design for content creators.",
+        technologies: ["HTML", "CSS"]
+    },
+    project6: {
+        title: "Merchandise POS",
+        images: ["assets/images/projects/merchandise-pos1.jpg", "assets/images/projects/merchandise-pos2.jpg", "assets/images/projects/merchandise-pos3.jpg"],
+        description: "A point‑of‑sale (POS) system that provides a complete solution for managing daily sales operations. It includes product management, QR code scanning, cart and checkout processing, cash‑on‑hand tracking, GCash integration, cash‑out monitoring, expense recording, and credit management. The system also features a detailed sales dashboard that organizes transactions by category and displays total income, modified items, and product‑level summaries, helping users efficiently track and manage their business.",
+        technologies: ["Flutter", "Dart", "Firebase"]
+    }
+};
+
+function openProjectModal(projectId) {
+    const modal = document.getElementById('project-modal');
+    const modalBody = document.getElementById('project-modal-body');
+    const project = projectData[projectId];
+    
+    if (!project) {
+        console.error('Project not found:', projectId);
+        return;
+    }
+    
+    // Build technologies HTML
+    const techHTML = project.technologies
+        .map(tech => `<span class="tech-tag">${tech}</span>`)
+        .join('');
+    
+    // Build YouTube link HTML if available
+    const youtubeLinkHTML = project.youtubeLink
+        ? `<div class="project-link">
+               <p>View more about the app: <a href="${project.youtubeLink}" target="_blank" rel="noopener noreferrer">Watch on YouTube</a></p>
+           </div>`
+        : '';
+    
+    // Build images HTML - support both single image and multiple images
+    let imagesHTML = '';
+    if (project.images && project.images.length > 0) {
+        // Multiple images
+        imagesHTML = `
+            <div class="project-modal-images">
+                ${project.images.map((img, index) => `
+                    <div class="project-modal-image">
+                        <img src="${img}" alt="${project.title} - Image ${index + 1}">
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else if (project.image) {
+        // Single image (backward compatibility)
+        imagesHTML = `
+            <div class="project-modal-image">
+                <img src="${project.image}" alt="${project.title}">
+            </div>
+        `;
+    }
+    
+    modalBody.innerHTML = `
+        <h2>${project.title}</h2>
+        
+        ${imagesHTML}
+        
+        <div class="project-modal-info">
+            <h3>About This Project</h3>
+            <p class="project-description">${project.description}</p>
+            
+            ${youtubeLinkHTML}
+            
+            <div class="project-technologies">
+                <h4>Technologies Used</h4>
+                <div class="tech-tags">
+                    ${techHTML}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeProjectModal() {
+    const modal = document.getElementById('project-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('project-modal');
+    if (e.target === modal) {
+        closeProjectModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeProjectModal();
+    }
+});
+
+// Experience & Leadership Modal
+const experienceData = {
+    'infor-software': {
+        title: "Software Engineer",
+        company: "Infor",
+        type: "Experience",
+        image: "assets/images/experience/infor-software.jpg",
+        description: "Working as a Software Engineer at Infor, a global leader in business cloud software specialized by industry.",
+        duration: "",
+        responsibilities: []
+    },
+    'infor-qa': {
+        title: "QA Engineer Intern",
+        company: "Infor",
+        type: "Experience",
+        image: "assets/images/experience/infor-qa.jpg",
+        description: "Completed an internship as a QA Engineer at Infor, gaining hands-on experience in software quality assurance and testing.",
+        duration: "",
+        responsibilities: []
+    },
+    'freelance': {
+        title: "Freelance Developer",
+        company: "Self-Employed",
+        type: "Experience",
+        image: "assets/images/experience/freelance.jpg",
+        description: "Working as a freelance developer, creating custom solutions for various clients.",
+        duration: "",
+        responsibilities: []
+    },
+    'aws-coo': {
+        title: "Chief Operations Officer",
+        company: "AWS Cloud Club NU Baliwag",
+        type: "Leadership",
+        image: "assets/images/experience/aws-cloud.jpg",
+        description: "Led operations and strategic initiatives for the AWS Cloud Club at National University - Baliwag.",
+        duration: "",
+        responsibilities: []
+    },
+    'gdsc-cto': {
+        title: "Chief Technology Officer",
+        company: "Google Developer Student Club NU Baliwag",
+        type: "Leadership",
+        image: "assets/images/experience/gdsc-cto.jpg",
+        description: "Served as Chief Technology Officer for the Google Developer Student Club at National University - Baliwag.",
+        duration: "",
+        responsibilities: []
+    },
+    'gdsc-lead': {
+        title: "Software Development Lead",
+        company: "Google Developer Student Club NU Baliwag",
+        type: "Leadership",
+        image: "assets/images/experience/gdsc-lead.jpg",
+        description: "Led software development initiatives and mentored students in the Google Developer Student Club at National University - Baliwag.",
+        duration: "",
+        responsibilities: []
+    }
+};
+
+function openExperienceModal(experienceId) {
+    const modal = document.getElementById('experience-modal');
+    const modalBody = document.getElementById('experience-modal-body');
+    const experience = experienceData[experienceId];
+    
+    if (!experience) {
+        console.error('Experience not found:', experienceId);
+        return;
+    }
+    
+    // Build responsibilities HTML if available
+    const responsibilitiesHTML = experience.responsibilities && experience.responsibilities.length > 0
+        ? `<div class="experience-responsibilities">
+               <h4>Key Responsibilities</h4>
+               <ul>
+                   ${experience.responsibilities.map(resp => `<li>${resp}</li>`).join('')}
+               </ul>
+           </div>`
+        : '';
+    
+    // Build duration HTML if available
+    const durationHTML = experience.duration
+        ? `<p class="experience-duration">${experience.duration}</p>`
+        : '';
+    
+    modalBody.innerHTML = `
+        <h2>${experience.title}</h2>
+        <h3 class="experience-company">${experience.company}</h3>
+        ${durationHTML}
+        <span class="experience-type-badge">${experience.type}</span>
+        
+        <div class="project-modal-image">
+            <img src="${experience.image}" alt="${experience.title}">
+        </div>
+        
+        <div class="project-modal-info">
+            <h3>About This Role</h3>
+            <p class="project-description">${experience.description}</p>
+            
+            ${responsibilitiesHTML}
+        </div>
+    `;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeExperienceModal() {
+    const modal = document.getElementById('experience-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Close experience modal when clicking outside
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('experience-modal');
+    if (e.target === modal) {
+        closeExperienceModal();
+    }
+});
+
+// Close experience modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeExperienceModal();
+    }
+});

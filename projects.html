@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Ernest Byrron Flores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    
+    <main>
+        <section id="all-projects">
+            <h1>Projects</h1>
+            <p class="section-subtitle">A glimpse into my work</p>
+            
+            <div class="project-grid">
+                <div class="project-card" onclick="openProjectModal('ecommunity')">
+                    <div class="project-image">
+                        <img src="assets/images/projects/ecommunity.jpg" alt="Ecommunity.ph">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">01</div>
+                        <h3>Ecommunity.ph</h3>
+                        <p>A mobile-based solid waste management system for Baliwag, aimed at empowering residents, local government, and businesses...</p>
+                        <div class="project-card-tags">
+                            <span class="card-tag">Flutter</span>
+                            <span class="card-tag">Firebase</span>
+                            <span class="card-tag">Dart</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openProjectModal('project2')">
+                    <div class="project-image project-image-dual">
+                        <img src="assets/images/projects/inuvation1.jpg" alt="iNUvation Voting System">
+                        <img src="assets/images/projects/inuvation2.jpg" alt="iNUvation Voting System">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">02</div>
+                        <h3>iNUvation Voting System</h3>
+                        <p>A digital voting platform used by the students of National University – Baliwag to securely cast their votes for the iNUvation event...</p>
+                        <div class="project-card-tags">
+                            <span class="card-tag">React</span>
+                            <span class="card-tag">Flutter</span>
+                            <span class="card-tag">Firebase</span>
+                            <span class="card-tag more-count">+3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openProjectModal('project3')">
+                    <div class="project-image">
+                        <img src="assets/images/projects/hydrogrowth.jpg" alt="HydroGrowth">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">03</div>
+                        <h3>HydroGrowth</h3>
+                        <p>A real-time hydroponic farming monitoring app that connects directly to hardware sensors. The application displays essential environmental parameters...</p>
+                        <div class="project-card-tags">
+                            <span class="card-tag">Java</span>
+                            <span class="card-tag">Firebase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openProjectModal('project4')">
+                    <div class="project-image project-image-dual">
+                        <img src="assets/images/projects/medicine-vending1.jpg" alt="Medicine Vending Machine">
+                        <img src="assets/images/projects/medicine-vending2.jpg" alt="Medicine Vending Machine">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">04</div>
+                        <h3>Medicine Vending Machine</h3>
+                        <p>A kiosk‑based medicine vending system that allows users to order medicines through a touchscreen kiosk and pay using online payment methods...</p>
+                        <div class="project-card-tags">
+                            <span class="card-tag">Flutter</span>
+                            <span class="card-tag">Dart</span>
+                            <span class="card-tag">Firebase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openProjectModal('project5')">
+                    <div class="project-image">
+                        <img src="assets/images/projects/bldg126.jpg" alt="Bldg126">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">05</div>
+                        <h3>Bldg126</h3>
+                        <p>A minimalist, aesthetic website for a creative company that produces visual work and graphic design for content creators.</p>
+                        <div class="project-card-tags">
+                            <span class="card-tag">HTML</span>
+                            <span class="card-tag">CSS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openProjectModal('project6')">
+                    <div class="project-image project-image-triple">
+                        <img src="assets/images/projects/merchandise-pos1.jpg" alt="Merchandise POS">
+                        <img src="assets/images/projects/merchandise-pos2.jpg" alt="Merchandise POS">
+                        <img src="assets/images/projects/merchandise-pos3.jpg" alt="Merchandise POS">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">06</div>
+                        <h3>Merchandise POS</h3>
+                        <p>A point‑of‑sale (POS) system that provides a complete solution for managing daily sales operations. It includes product management, QR code scanning...</p>
+                        <div class="project-card-tags">
+                            <span class="card-tag">Flutter</span>
+                            <span class="card-tag">Dart</span>
+                            <span class="card-tag">Firebase</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="back-home-container">
+                <a href="index.html#projects" class="cta-button-outline">← Back to Home</a>
+            </div>
+        </section>
+    </main>
+
+    <div id="project-modal" class="modal">
+        <div class="modal-content project-modal-content">
+            <span class="close-modal" onclick="closeProjectModal()">&times;</span>
+            <div id="project-modal-body">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Ernest Byrron Flores. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
