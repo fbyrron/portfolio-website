@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awards & Recognition - Ernest Byrron Flores</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    
+    <main>
+        <section id="all-projects">
+            <h1>Awards & Recognition</h1>
+            <p class="section-subtitle">Achievements and milestones</p>
+            
+            <div class="project-grid">
+                <div class="project-card" onclick="openAwardModal('award1')">
+                    <div class="project-image project-image-triple">
+                        <img src="assets/images/awards/magna1.jpg" alt="Magna Cum Laude">
+                        <img src="assets/images/awards/magna2.jpg" alt="Magna Cum Laude">
+                        <img src="assets/images/awards/magna3.jpg" alt="Magna Cum Laude">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">01</div>
+                        <h3>Magna Cum Laude</h3>
+                        <p>Graduated with Latin honors (Magna Cum Laude) in Bachelor of Science in Information Technology from National University...</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openAwardModal('award2')">
+                    <div class="project-image project-image-dual">
+                        <img src="assets/images/awards/amy1.jpg" alt="AMY Innovation Awards">
+                        <img src="assets/images/awards/amy2.jpg" alt="AMY Innovation Awards">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">02</div>
+                        <h3>AMY Innovation Awards 2024 – 2nd Place</h3>
+                        <p>Achieved 2nd place in the 2024 Alfredo M. Yao (AMY) Innovation Awards, recognized by the Philippine Chamber of Commerce...</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openAwardModal('award3')">
+                    <div class="project-image">
+                        <img src="assets/images/awards/ecothon.jpg" alt="Ecothon">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">03</div>
+                        <h3>Ecothon – Top 11 Finalist</h3>
+                        <p>An ASEAN-wide hackathon series aimed at fostering eco-entrepreneurship and contributing to the United Nations...</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openAwardModal('award4')">
+                    <div class="project-image project-image-triple">
+                        <img src="assets/images/awards/appcon1.jpg" alt="App Con 2023">
+                        <img src="assets/images/awards/appcon2.jpg" alt="App Con 2023">
+                        <img src="assets/images/awards/appcon3.jpg" alt="App Con 2023">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">04</div>
+                        <h3>App Con 2023 – Top 20 Finalist</h3>
+                        <p>One of the Top 20 teams out of 222 participants in the AppCon 2023: An Invitational Application Development Contest...</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openAwardModal('award5')">
+                    <div class="project-image project-image-triple">
+                        <img src="assets/images/awards/genai1.jpg" alt="AWS Hackathon">
+                        <img src="assets/images/awards/genai2.jpg" alt="AWS Hackathon">
+                        <img src="assets/images/awards/genai3.jpg" alt="AWS Hackathon">
+                        <img src="assets/images/awards/genai4.jpg" alt="AWS Hackathon">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">05</div>
+                        <h3>AWS - Pointwest Gen AI Hackathon - Top 5 Finalist</h3>
+                        <p>A competition challenging students to build innovative Generative AI solutions addressing real-world organizational problems...</p>
+                    </div>
+                </div>
+
+                <div class="project-card" onclick="openAwardModal('award6')">
+                    <div class="project-image">
+                        <img src="assets/images/awards/university.jpg" alt="NU Scholarship">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">06</div>
+                        <h3>University Academic Excellence Benefit Grantee</h3>
+                        <p>One of the grantees of the NU Scholarship, awarded to exceptional students at National University in recognition of...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="back-home-container">
+                <a href="index.html#awards" class="cta-button-outline">← Back to Home</a>
+            </div>
+        </section>
+    </main>
+
+    <div id="award-modal" class="modal">
+        <div class="modal-content project-modal-content">
+            <span class="close-modal" onclick="closeAwardModal()">&times;</span>
+            <div id="award-modal-body">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Ernest Byrron Flores. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

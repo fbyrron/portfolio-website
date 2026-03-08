@@ -553,3 +553,105 @@ document.addEventListener('keydown', (e) => {
         closeExperienceModal();
     }
 });
+
+// Awards & Recognition Modal
+const awardData = {
+    'award1': {
+        title: "Magna Cum Laude",
+        images: ["assets/images/awards/magna1.jpg", "assets/images/awards/magna2.jpg", "assets/images/awards/magna3.jpg"],
+        description: "Graduated with Latin honors (Magna Cum Laude) in Bachelor of Science in Information Technology from National University – Baliwag."
+    },
+    'award2': {
+        title: "AMY Innovation Awards 2024 – 2nd Place",
+        images: ["assets/images/awards/amy1.jpg", "assets/images/awards/amy2.jpg"],
+        description: "Achieved 2nd place in the 2024 Alfredo M. Yao (AMY) Innovation Awards, recognized by the Philippine Chamber of Commerce and Industry for impactful technological innovation."
+    },
+    'award3': {
+        title: "Ecothon – Top 11 Finalist",
+        image: "assets/images/awards/ecothon.jpg",
+        description: "An ASEAN-wide hackathon series aimed at fostering eco-entrepreneurship and contributing to the United Nations Sustainable Development Goal 12: Sustainable Consumption and Production (SCP)."
+    },
+    'award4': {
+        title: "App Con 2023 – Top 20 Finalist",
+        images: ["assets/images/awards/appcon1.jpg", "assets/images/awards/appcon2.jpg", "assets/images/awards/appcon3.jpg"],
+        description: "One of the Top 20 teams out of 222 participants in the AppCon 2023: An Invitational Application Development Contest, organized by OTIS Philippines."
+    },
+    'award5': {
+        title: "AWS - Pointwest Gen AI Hackathon - Top 5 Finalist",
+        images: ["assets/images/awards/genai1.jpg", "assets/images/awards/genai2.jpg", "assets/images/awards/genai3.jpg", "assets/images/awards/genai4.jpg"],
+        description: "A competition challenging students to build innovative Generative AI solutions addressing real-world organizational problems using AWS Cloud technologies."
+    },
+    'award6': {
+        title: "University Academic Excellence Benefit Grantee",
+        image: "assets/images/awards/university.jpg",
+        description: "One of the grantees of the NU Scholarship, awarded to exceptional students at National University in recognition of academic excellence, leadership, and dedication to community development."
+    }
+};
+
+function openAwardModal(awardId) {
+    const modal = document.getElementById('award-modal');
+    const modalBody = document.getElementById('award-modal-body');
+    const award = awardData[awardId];
+    
+    if (!award) {
+        console.error('Award not found:', awardId);
+        return;
+    }
+    
+    // Build images HTML - support both single image and multiple images
+    let imagesHTML = '';
+    if (award.images && award.images.length > 0) {
+        // Multiple images
+        imagesHTML = `
+            <div class="project-modal-images">
+                ${award.images.map((img, index) => `
+                    <div class="project-modal-image">
+                        <img src="${img}" alt="${award.title} - Image ${index + 1}">
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else if (award.image) {
+        // Single image
+        imagesHTML = `
+            <div class="project-modal-image">
+                <img src="${award.image}" alt="${award.title}">
+            </div>
+        `;
+    }
+    
+    modalBody.innerHTML = `
+        <h2>${award.title}</h2>
+        
+        ${imagesHTML}
+        
+        <div class="project-modal-info">
+            <h3>About This Achievement</h3>
+            <p class="project-description">${award.description}</p>
+        </div>
+    `;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAwardModal() {
+    const modal = document.getElementById('award-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Close award modal when clicking outside
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('award-modal');
+    if (e.target === modal) {
+        closeAwardModal();
+    }
+});
+
+// Close award modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeAwardModal();
+    }
+});

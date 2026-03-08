@@ -43,12 +43,9 @@
                     </div>
                 </div>
             </div>
-            <div class="hero-bio-section">
-                <p class="bio">Hi there! I'm a self-taught full-stack mobile and web developer, and a Magna Cum Laude graduate of BS Information Technology from National University-Baliwag. I love creating digital products that not only look great but also solve real problems. My goal is to design experiences that feel seamless and meaningful while balancing both user needs and business goals. I am always excited to learn new things and build projects that make a positive impact!</p>
-                <div class="hero-cta">
-                    <a href="#projects" class="cta-button">View My Work</a>
-                    <a href="#contact" class="cta-button-outline">Get In Touch</a>
-                </div>
+            <div class="hero-cta">
+                <a href="#projects" class="cta-button">View My Work</a>
+                <a href="#contact" class="cta-button-outline">Get In Touch</a>
             </div>
             <div class="scroll-indicator">
                 <span></span>
@@ -243,22 +240,45 @@
 
         <section id="awards">
             <h2>Awards & Recognition</h2>
-            <div class="awards-grid">
-                <div class="award-card">
-                    <div class="award-icon">🏆</div>
-                    <h3>Magna Cum Laude</h3>
-                    <p>BS Information Technology, National University-Baliwag</p>
+            <div class="project-grid">
+                <div class="project-card" onclick="openAwardModal('award1')">
+                    <div class="project-image project-image-triple">
+                        <img src="assets/images/awards/magna1.jpg" alt="Magna Cum Laude">
+                        <img src="assets/images/awards/magna2.jpg" alt="Magna Cum Laude">
+                        <img src="assets/images/awards/magna3.jpg" alt="Magna Cum Laude">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">01</div>
+                        <h3>Magna Cum Laude</h3>
+                        <p>Graduated with Latin honors (Magna Cum Laude) in Bachelor of Science in Information Technology from National University...</p>
+                    </div>
                 </div>
-                <div class="award-card">
-                    <div class="award-icon">⭐</div>
-                    <h3>Award Title</h3>
-                    <p>Recognition and achievement details placeholder.</p>
+                <div class="project-card" onclick="openAwardModal('award2')">
+                    <div class="project-image project-image-dual">
+                        <img src="assets/images/awards/amy1.jpg" alt="AMY Innovation Awards">
+                        <img src="assets/images/awards/amy2.jpg" alt="AMY Innovation Awards">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">02</div>
+                        <h3>AMY Innovation Awards 2024 – 2nd Place</h3>
+                        <p>Achieved 2nd place in the 2024 Alfredo M. Yao (AMY) Innovation Awards, recognized by the Philippine Chamber of Commerce...</p>
+                    </div>
                 </div>
-                <div class="award-card">
-                    <div class="award-icon">🎖️</div>
-                    <h3>Award Title</h3>
-                    <p>Recognition and achievement details placeholder.</p>
+                <div class="project-card" onclick="openAwardModal('award5')">
+                    <div class="project-image project-image-triple">
+                        <img src="assets/images/awards/genai1.jpg" alt="AWS Hackathon">
+                        <img src="assets/images/awards/genai2.jpg" alt="AWS Hackathon">
+                        <img src="assets/images/awards/genai3.jpg" alt="AWS Hackathon">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">03</div>
+                        <h3>AWS - Pointwest Gen AI Hackathon - Top 5 Finalist</h3>
+                        <p>A competition challenging students to build innovative Generative AI solutions addressing real-world organizational problems...</p>
+                    </div>
                 </div>
+            </div>
+            <div class="view-more-container">
+                <a href="awards.html" class="view-more-link">View More Awards →</a>
             </div>
         </section>
 
@@ -269,8 +289,8 @@
                 <a href="mailto:fbyrron19@gmail.com" class="contact-link">
                     <span class="link-text">Email</span>
                 </a>
-                <a href="https://github.com/yourusername" target="_blank" class="contact-link">
-                    <span class="link-text">GitHub</span>
+                <a href="https://instagram.com/ernestbyrron" target="_blank" class="contact-link">
+                    <span class="link-text">Instagram</span>
                 </a>
                 <a href="https://www.linkedin.com/in/ernest-byrron-flores-078899250/" target="_blank" class="contact-link">
                     <span class="link-text">LinkedIn</span>
@@ -403,6 +423,15 @@
         <div class="modal-content project-modal-content">
             <span class="close-modal" onclick="closeExperienceModal()">&times;</span>
             <div id="experience-modal-body">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div id="award-modal" class="modal">
+        <div class="modal-content project-modal-content">
+            <span class="close-modal" onclick="closeAwardModal()">&times;</span>
+            <div id="award-modal-body">
                 <!-- Content will be loaded by JavaScript -->
             </div>
         </div>
