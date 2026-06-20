@@ -413,6 +413,8 @@ section {
 
 .hero-avatar {
     flex-shrink: 0;
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(0, 255, 136, 0.3);
 }
 
 .avatar-container {
@@ -424,7 +426,6 @@ section {
     align-items: center;
     justify-content: center;
     position: relative;
-    box-shadow: 0 0 60px rgba(0, 255, 136, 0.3);
     overflow: hidden;
 }
 
@@ -2979,9 +2980,12 @@ footer {
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
 }
 
+[data-theme="light"] .hero-avatar {
+    box-shadow: 0 20px 60px rgba(0, 102, 204, 0.15), 0 0 0 1px rgba(0, 153, 77, 0.08);
+}
+
 [data-theme="light"] .avatar-container {
     background: radial-gradient(circle at 30% 30%, rgba(0, 153, 77, 0.15), rgba(0, 102, 204, 0.1), transparent);
-    box-shadow: 0 20px 60px rgba(0, 102, 204, 0.15), 0 0 0 1px rgba(0, 153, 77, 0.08);
 }
 
 [data-theme="light"] .avatar-dark,
