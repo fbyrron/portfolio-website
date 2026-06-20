@@ -347,7 +347,8 @@ nav a:hover::after {
     border: none;
     cursor: pointer;
     padding: 5px;
-    z-index: 1001;
+    position: relative;
+    z-index: 1003;
 }
 
 .header-actions {
@@ -390,6 +391,24 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    scroll-margin-top: 70px;
+    position: relative;
+}
+
+section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0.4;
+}
+
+section:last-of-type::after {
+    display: none;
 }
 
 #hero {
@@ -1310,28 +1329,70 @@ footer {
     nav {
         display: none;
         position: fixed;
-        top: 60px;
+        top: 0;
         left: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(20px);
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(160deg, #000000 0%, #0a1428 50%, #000f1e 100%) !important;
         flex-direction: column;
         padding: 2rem;
-        gap: 1.5rem;
-        border-bottom: 1px solid var(--border);
+        gap: 0;
+        align-items: center;
+        justify-content: center;
+        z-index: 1002;
+        overflow: hidden;
     }
     
     nav.active {
         display: flex;
+        animation: navFadeIn 0.3s ease forwards;
+    }
+
+    @keyframes navFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
     
     [data-theme="light"] nav {
-        background: rgba(255, 255, 255, 0.85);
+        background: linear-gradient(160deg, #f8fafb 0%, #dceeff 50%, #f0f7ff 100%) !important;
     }
     
     nav a {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         text-align: center;
+        padding: 1.2rem 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        width: 80%;
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    nav a:last-child {
+        border-bottom: none;
+    }
+
+    nav a:hover,
+    nav a:active {
+        background: rgba(0, 255, 136, 0.1);
+        transform: scale(1.05);
+    }
+
+    [data-theme="light"] nav a {
+        border-bottom-color: rgba(0, 0, 0, 0.06);
+    }
+
+    [data-theme="light"] nav a:hover,
+    [data-theme="light"] nav a:active {
+        background: rgba(0, 153, 77, 0.08);
+    }
+
+    nav a::after {
+        display: none;
     }
     
     .hero-content {
@@ -2968,10 +3029,6 @@ footer {
 [data-theme="light"] body {
     background: linear-gradient(160deg, #f8fafb 0%, #e8f4f8 40%, #f0f7ff 100%);
     background-attachment: fixed;
-}
-
-[data-theme="light"] nav {
-    background: transparent;
 }
 
 [data-theme="light"] .modal {
