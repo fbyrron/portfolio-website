@@ -629,6 +629,11 @@ const awardData = {
         title: "University Academic Excellence Benefit Grantee",
         image: "assets/images/awards/university.jpg",
         description: "One of the grantees of the NU Scholarship, awarded to exceptional students at National University in recognition of academic excellence, leadership, and dedication to community development."
+    },
+    'award7': {
+        title: "Best Capstone Project – BSIT NU Bulacan",
+        images: ["assets/images/awards/best-capstone-1.jpg", "assets/images/awards/best-capstone-2.jpg"],
+        description: "Recognized for having the Best Capstone Project in the BSIT program at National University – Bulacan, selected from all graduating groups in the batch."
     }
 };
 

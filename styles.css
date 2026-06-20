@@ -414,7 +414,11 @@ section {
 .hero-avatar {
     flex-shrink: 0;
     border-radius: 50%;
-    box-shadow: 0 0 60px rgba(0, 255, 136, 0.3);
+    filter: drop-shadow(0 0 40px rgba(0, 255, 136, 0.3));
+}
+
+[data-theme="light"] .hero-avatar {
+    filter: drop-shadow(0 10px 30px rgba(0, 102, 204, 0.2));
 }
 
 .avatar-container {
@@ -2978,10 +2982,6 @@ footer {
     background: var(--bg-card);
     border-color: var(--border);
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-}
-
-[data-theme="light"] .hero-avatar {
-    box-shadow: 0 20px 60px rgba(0, 102, 204, 0.15), 0 0 0 1px rgba(0, 153, 77, 0.08);
 }
 
 [data-theme="light"] .avatar-container {
