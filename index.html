@@ -5,17 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ernest Byrron Flores - Developer & Designer</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        // Apply saved theme immediately to prevent flash
+        (function() {
+            var t = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
 </head>
 <body>
     <canvas id="particles"></canvas>
     
     <header>
         <div class="logo">EBF</div>
-        <button class="mobile-menu-toggle" aria-label="Toggle menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
         <nav>
             <a href="#hero">Home</a>
             <a href="#tech-stack">Tech Stack</a>
@@ -24,6 +26,25 @@
             <a href="#awards">Awards</a>
             <a href="#contact">Contact</a>
         </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" aria-label="Toggle dark/light mode" onclick="toggleTheme()">
+                <div class="toggle-switch">
+                    <div class="toggle-track"></div>
+                    <div class="toggle-stars">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="toggle-clouds">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="toggle-knob"></div>
+                </div>
+            </button>
+            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 
     <main>
@@ -31,7 +52,9 @@
             <div class="hero-content">
                 <div class="hero-avatar">
                     <div class="avatar-container">
-                        <img src="assets/images/profile.jpg" alt="Ernest Byrron Flores" class="avatar-image">
+                        <img src="assets/images/profile.jpg" alt="Ernest Byrron Flores" class="avatar-image avatar-dark">
+                        <img src="assets/images/profile-light.jpg" alt="Ernest Byrron Flores" class="avatar-image avatar-light">
+                        <div class="avatar-flash" aria-hidden="true"></div>
                     </div>
                 </div>
                 <div class="hero-text">
@@ -445,3 +468,14 @@
     <script src="game.js"></script>
 </body>
 </html>
+<!--
+HOBBIES..?
+i also do hosting
+attending tech workshops
+
+AWARDS
+add golden sphere awards
+best capstone award 
+
+UPDATE EXPERIENCES descriptions
+-->

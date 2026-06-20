@@ -5,10 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Awards & Recognition - Ernest Byrron Flores</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        // Apply saved theme immediately to prevent flash
+        (function() {
+            var t = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
 </head>
 <body>
     <canvas id="particles"></canvas>
     
+    <header>
+        <div class="logo"><a href="index.html" style="text-decoration:none;color:inherit;background:linear-gradient(135deg, var(--primary), var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">EBF</a></div>
+        <button class="theme-toggle" aria-label="Toggle dark/light mode" onclick="toggleTheme()">
+            <div class="toggle-switch">
+                <div class="toggle-track"></div>
+                <div class="toggle-stars">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="toggle-clouds">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="toggle-knob"></div>
+            </div>
+        </button>
+    </header>
+
     <main>
         <section id="all-projects">
             <h1>Awards & Recognition</h1>

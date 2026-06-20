@@ -1,3 +1,37 @@
+// Theme toggle
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+    } else {
+        // Default to dark
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    
+    // Trigger camera flash on avatar
+    const flash = document.querySelector('.avatar-flash');
+    if (flash) {
+        flash.classList.remove('flash-active');
+        void flash.offsetWidth; // force reflow
+        flash.classList.add('flash-active');
+        setTimeout(() => flash.classList.remove('flash-active'), 600);
+    }
+    
+    // Swap theme slightly after flash peaks
+    setTimeout(() => {
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+    }, 80);
+}
+
+// Apply theme immediately to avoid flash
+initTheme();
+
 // Particle background
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
@@ -29,7 +63,9 @@ class Particle {
     }
 
     draw() {
-        ctx.fillStyle = `rgba(0, 255, 136, ${this.opacity})`;
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const color = isLight ? `rgba(0, 153, 77, ${this.opacity})` : `rgba(0, 255, 136, ${this.opacity})`;
+        ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -51,6 +87,7 @@ function animateParticles() {
     });
 
     // Draw connections
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     particles.forEach((a, i) => {
         particles.slice(i + 1).forEach(b => {
             const dx = a.x - b.x;
@@ -58,7 +95,10 @@ function animateParticles() {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 100) {
-                ctx.strokeStyle = `rgba(0, 255, 136, ${0.2 * (1 - distance / 100)})`;
+                const color = isLight
+                    ? `rgba(0, 153, 77, ${0.15 * (1 - distance / 100)})`
+                    : `rgba(0, 255, 136, ${0.2 * (1 - distance / 100)})`;
+                ctx.strokeStyle = color;
                 ctx.lineWidth = 0.5;
                 ctx.beginPath();
                 ctx.moveTo(a.x, a.y);
@@ -282,12 +322,16 @@ function drawCursorTrail() {
     const now = Date.now();
     cursorTrail = cursorTrail.filter(point => now - point.time < 500);
     
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     cursorTrail.forEach((point, index) => {
         const age = now - point.time;
         const opacity = 1 - (age / 500);
         const size = 3 * opacity;
         
-        ctx.fillStyle = `rgba(0, 136, 255, ${opacity * 0.3})`;
+        const color = isLight
+            ? `rgba(0, 102, 204, ${opacity * 0.2})`
+            : `rgba(0, 136, 255, ${opacity * 0.3})`;
+        ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(point.x, point.y, size, 0, Math.PI * 2);
         ctx.fill();
