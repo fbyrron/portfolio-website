@@ -32,6 +32,46 @@ function toggleTheme() {
 // Apply theme immediately to avoid flash
 initTheme();
 
+// View toggle (grid/list) for sub-pages
+function setView(view) {
+    const grid = document.querySelector('.project-grid');
+    const buttons = document.querySelectorAll('.view-toggle-btn');
+    
+    if (!grid) return;
+    
+    // Remove preload style that may override
+    const preload = document.getElementById('view-preload');
+    if (preload) preload.remove();
+    
+    if (view === 'list') {
+        grid.classList.add('list-view');
+    } else {
+        grid.classList.remove('list-view');
+    }
+    
+    buttons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === view);
+    });
+    
+    localStorage.setItem('viewPreference', view);
+}
+
+// Restore saved view preference immediately to prevent flash
+(function() {
+    const saved = localStorage.getItem('viewPreference');
+    if (saved === 'list') {
+        // Add class before first paint via inline style injection
+        const style = document.createElement('style');
+        style.textContent = '.project-grid { grid-template-columns: 1fr !important; gap: 1rem; } .project-grid .project-card { flex-direction: row; align-items: center; }';
+        document.head.appendChild(style);
+        // Then properly set it once DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            setView('list');
+            style.remove();
+        });
+    }
+})();
+
 // Particle background
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
@@ -158,8 +198,21 @@ function initMobileMenu() {
     
     if (menuToggle && nav) {
         menuToggle.addEventListener('click', () => {
-            nav.classList.toggle('active');
-            menuToggle.classList.toggle('active');
+            if (nav.classList.contains('active')) {
+                // Close with animation
+                nav.classList.remove('active');
+                nav.classList.add('closing');
+                menuToggle.classList.remove('active');
+                nav.addEventListener('animationend', function handler() {
+                    nav.classList.remove('closing');
+                    nav.removeEventListener('animationend', handler);
+                });
+            } else {
+                // Open
+                nav.classList.remove('closing');
+                nav.classList.add('active');
+                menuToggle.classList.add('active');
+            }
         });
         
         // Close menu when clicking on a link
@@ -167,15 +220,25 @@ function initMobileMenu() {
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 nav.classList.remove('active');
+                nav.classList.add('closing');
                 menuToggle.classList.remove('active');
+                nav.addEventListener('animationend', function handler() {
+                    nav.classList.remove('closing');
+                    nav.removeEventListener('animationend', handler);
+                });
             });
         });
         
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+            if (!nav.contains(e.target) && !menuToggle.contains(e.target) && nav.classList.contains('active')) {
                 nav.classList.remove('active');
+                nav.classList.add('closing');
                 menuToggle.classList.remove('active');
+                nav.addEventListener('animationend', function handler() {
+                    nav.classList.remove('closing');
+                    nav.removeEventListener('animationend', handler);
+                });
             }
         });
     }
@@ -383,6 +446,208 @@ const projectData = {
     }
 };
 
+// Set modal transform-origin from clicked element
+function setModalOrigin(modal, event) {
+    const content = modal.querySelector('.modal-content');
+    if (content && event && event.currentTarget) {
+        const card = event.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        content.style.transformOrigin = `${centerX}px ${centerY}px`;
+        // Reset after animation
+        setTimeout(() => {
+            content.style.transformOrigin = 'center center';
+        }, 500);
+    }
+}
+
+// Build carousel HTML for modal images
+function buildModalCarousel(images, title) {
+    if (!images || images.length === 0) return '';
+    if (images.length === 1) {
+        return `<div class="project-modal-image" onclick="openFullscreen(this.querySelector('img').src)">
+            <img src="${images[0]}" alt="${title}">
+        </div>`;
+    }
+    const slides = images.map((img, i) => `
+        <div class="carousel-slide" onclick="openFullscreen(this.querySelector('img').src)">
+            <img src="${img}" alt="${title} - Image ${i + 1}">
+        </div>
+    `).join('');
+    const dots = images.map((_, i) => `
+        <div class="modal-carousel-dot${i === 0 ? ' active' : ''}" data-index="${i}"></div>
+    `).join('');
+    return `
+        <div class="project-modal-images">
+            <div class="modal-carousel" data-index="0">${slides}</div>
+            <button class="carousel-arrow carousel-prev" onclick="carouselNav(this, -1)">&#8249;</button>
+            <button class="carousel-arrow carousel-next" onclick="carouselNav(this, 1)">&#8250;</button>
+            <div class="modal-carousel-dots">${dots}</div>
+        </div>
+    `;
+}
+
+// Fullscreen image viewer with swipe and arrows
+let fullscreenImages = [];
+let fullscreenIndex = 0;
+
+function openFullscreen(src) {
+    // Get all images from the current carousel
+    const carousel = event.target.closest('.project-modal-images') || event.target.closest('.project-modal-image');
+    if (carousel) {
+        const imgs = carousel.querySelectorAll('img');
+        fullscreenImages = Array.from(imgs).map(img => img.src);
+        fullscreenIndex = fullscreenImages.indexOf(src);
+        if (fullscreenIndex === -1) fullscreenIndex = 0;
+    } else {
+        fullscreenImages = [src];
+        fullscreenIndex = 0;
+    }
+    
+    let viewer = document.getElementById('fullscreen-viewer');
+    if (!viewer) {
+        viewer = document.createElement('div');
+        viewer.id = 'fullscreen-viewer';
+        viewer.className = 'fullscreen-viewer';
+        viewer.innerHTML = `
+            <button class="fs-close" onclick="closeFullscreen()">&times;</button>
+            <button class="fs-arrow fs-prev" onclick="fullscreenNav(-1)">&#8249;</button>
+            <img src="" alt="Fullscreen">
+            <button class="fs-arrow fs-next" onclick="fullscreenNav(1)">&#8250;</button>
+            <div class="fs-counter"></div>
+        `;
+        // Close on background click
+        viewer.addEventListener('click', (e) => {
+            if (e.target === viewer) closeFullscreen();
+        });
+        // Swipe support
+        let startX = 0, diff = 0;
+        viewer.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
+        viewer.addEventListener('touchend', (e) => {
+            diff = e.changedTouches[0].clientX - startX;
+            if (diff > 60) fullscreenNav(-1);
+            else if (diff < -60) fullscreenNav(1);
+        });
+        document.body.appendChild(viewer);
+    }
+    
+    updateFullscreen(viewer);
+    viewer.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function updateFullscreen(viewer) {
+    if (!viewer) viewer = document.getElementById('fullscreen-viewer');
+    const img = viewer.querySelector('img');
+    const prev = viewer.querySelector('.fs-prev');
+    const next = viewer.querySelector('.fs-next');
+    const counter = viewer.querySelector('.fs-counter');
+    
+    img.src = fullscreenImages[fullscreenIndex];
+    prev.style.display = fullscreenIndex === 0 ? 'none' : 'flex';
+    next.style.display = fullscreenIndex === fullscreenImages.length - 1 ? 'none' : 'flex';
+    counter.textContent = fullscreenImages.length > 1 ? `${fullscreenIndex + 1} / ${fullscreenImages.length}` : '';
+}
+
+function fullscreenNav(dir) {
+    fullscreenIndex = Math.max(0, Math.min(fullscreenIndex + dir, fullscreenImages.length - 1));
+    updateFullscreen();
+}
+
+function closeFullscreen() {
+    const viewer = document.getElementById('fullscreen-viewer');
+    if (viewer) {
+        viewer.classList.remove('active');
+        document.body.style.overflow = 'hidden'; // modal is still open
+    }
+}
+
+// Close fullscreen with Escape (prevent modal from closing)
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const viewer = document.getElementById('fullscreen-viewer');
+        if (viewer && viewer.classList.contains('active')) {
+            closeFullscreen();
+            e.stopImmediatePropagation();
+            return;
+        }
+    }
+}, true);
+
+// Initialize carousel swipe on a modal
+function initModalCarousel(modal) {
+    const carousel = modal.querySelector('.modal-carousel');
+    if (!carousel) return;
+    
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const dots = modal.querySelectorAll('.modal-carousel-dot');
+    const prevBtn = modal.querySelector('.carousel-prev');
+    const nextBtn = modal.querySelector('.carousel-next');
+    let currentIndex = 0;
+    let startX = 0;
+    let diff = 0;
+    
+    function updateArrows() {
+        if (prevBtn) prevBtn.style.display = currentIndex === 0 ? 'none' : 'flex';
+        if (nextBtn) nextBtn.style.display = currentIndex === slides.length - 1 ? 'none' : 'flex';
+    }
+    
+    function goTo(index) {
+        currentIndex = Math.max(0, Math.min(index, slides.length - 1));
+        carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+        carousel.dataset.index = currentIndex;
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+        updateArrows();
+    }
+    
+    // Initial arrow state
+    updateArrows();
+    
+    // Touch swipe
+    carousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        carousel.style.transition = 'none';
+    });
+    
+    carousel.addEventListener('touchmove', (e) => {
+        diff = e.touches[0].clientX - startX;
+        const offset = -(currentIndex * 100) + (diff / carousel.offsetWidth * 100);
+        carousel.style.transform = `translateX(${offset}%)`;
+    });
+    
+    carousel.addEventListener('touchend', () => {
+        carousel.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+        if (diff > 50) goTo(currentIndex - 1);
+        else if (diff < -50) goTo(currentIndex + 1);
+        else goTo(currentIndex);
+        diff = 0;
+    });
+    
+    // Dot clicks
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
+    });
+}
+
+// Carousel arrow navigation
+function carouselNav(btn, direction) {
+    const container = btn.closest('.project-modal-images');
+    const carousel = container.querySelector('.modal-carousel');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const dots = container.querySelectorAll('.modal-carousel-dot');
+    const prevBtn = container.querySelector('.carousel-prev');
+    const nextBtn = container.querySelector('.carousel-next');
+    let current = parseInt(carousel.dataset.index || 0);
+    
+    current = Math.max(0, Math.min(current + direction, slides.length - 1));
+    carousel.dataset.index = current;
+    carousel.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+    if (prevBtn) prevBtn.style.display = current === 0 ? 'none' : 'flex';
+    if (nextBtn) nextBtn.style.display = current === slides.length - 1 ? 'none' : 'flex';
+}
+
 function openProjectModal(projectId) {
     const modal = document.getElementById('project-modal');
     const modalBody = document.getElementById('project-modal-body');
@@ -392,6 +657,9 @@ function openProjectModal(projectId) {
         console.error('Project not found:', projectId);
         return;
     }
+
+    // Morph from clicked card
+    setModalOrigin(modal, window.event || event);
     
     // Build technologies HTML
     const techHTML = project.technologies
@@ -408,23 +676,9 @@ function openProjectModal(projectId) {
     // Build images HTML - support both single image and multiple images
     let imagesHTML = '';
     if (project.images && project.images.length > 0) {
-        // Multiple images
-        imagesHTML = `
-            <div class="project-modal-images">
-                ${project.images.map((img, index) => `
-                    <div class="project-modal-image">
-                        <img src="${img}" alt="${project.title} - Image ${index + 1}">
-                    </div>
-                `).join('')}
-            </div>
-        `;
+        imagesHTML = buildModalCarousel(project.images, project.title);
     } else if (project.image) {
-        // Single image (backward compatibility)
-        imagesHTML = `
-            <div class="project-modal-image">
-                <img src="${project.image}" alt="${project.title}">
-            </div>
-        `;
+        imagesHTML = buildModalCarousel([project.image], project.title);
     }
     
     modalBody.innerHTML = `
@@ -449,6 +703,7 @@ function openProjectModal(projectId) {
     
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    initModalCarousel(modal);
 }
 
 function closeProjectModal() {
@@ -539,6 +794,9 @@ function openExperienceModal(experienceId) {
         console.error('Experience not found:', experienceId);
         return;
     }
+
+    // Morph from clicked card
+    setModalOrigin(modal, window.event || event);
     
     // Build responsibilities HTML if available
     const responsibilitiesHTML = experience.responsibilities && experience.responsibilities.length > 0
@@ -602,7 +860,7 @@ document.addEventListener('keydown', (e) => {
 const awardData = {
     'award1': {
         title: "Magna Cum Laude",
-        images: ["assets/images/awards/magna1.jpg", "assets/images/awards/magna2.jpg", "assets/images/awards/magna3.jpg"],
+        images: ["assets/images/awards/magna1.jpg", "assets/images/awards/magna2.jpg"],
         description: "Graduated with Latin honors (Magna Cum Laude) in Bachelor of Science in Information Technology from National University – Baliwag."
     },
     'award2': {
@@ -611,26 +869,31 @@ const awardData = {
         description: "Achieved 2nd place in the 2024 Alfredo M. Yao (AMY) Innovation Awards, recognized by the Philippine Chamber of Commerce and Industry for impactful technological innovation."
     },
     'award3': {
-        title: "Ecothon – Top 11 Finalist",
+        title: "Ecothon – Finalist",
         image: "assets/images/awards/ecothon.jpg",
         description: "An ASEAN-wide hackathon series aimed at fostering eco-entrepreneurship and contributing to the United Nations Sustainable Development Goal 12: Sustainable Consumption and Production (SCP)."
     },
     'award4': {
-        title: "App Con 2023 – Top 20 Finalist",
+        title: "App Con 2023 – Finalist",
         images: ["assets/images/awards/appcon1.jpg", "assets/images/awards/appcon2.jpg", "assets/images/awards/appcon3.jpg"],
         description: "One of the Top 20 teams out of 222 participants in the AppCon 2023: An Invitational Application Development Contest, organized by OTIS Philippines."
     },
     'award5': {
-        title: "AWS - Pointwest Gen AI Hackathon - Top 5 Finalist",
+        title: "AWS - Pointwest Gen AI Hackathon – Finalist",
         images: ["assets/images/awards/genai1.jpg", "assets/images/awards/genai2.jpg", "assets/images/awards/genai3.jpg", "assets/images/awards/genai4.jpg"],
         description: "A competition challenging students to build innovative Generative AI solutions addressing real-world organizational problems using AWS Cloud technologies."
     },
     'award6': {
+        title: "3rd Golden Sphere Awards – Multiple Recognitions",
+        images: ["assets/images/awards/golden-sphere-1.jpg", "assets/images/awards/golden-sphere-2.jpg"],
+        description: "Honored at the 3rd Golden Sphere Awards at National University Baliwag, a ceremony celebrating outstanding student leaders.<br><br><ul><li>Executive Director's List Award – Rank 5</li><li>Excellent Effort Award</li><li>Commitment to Service Award (Nominee)</li><li>Outstanding Special Interest Organization</li></ul>"
+    },
+    'award7': {
         title: "University Academic Excellence Benefit Grantee",
         image: "assets/images/awards/university.jpg",
         description: "One of the grantees of the NU Scholarship, awarded to exceptional students at National University in recognition of academic excellence, leadership, and dedication to community development."
     },
-    'award7': {
+    'award8': {
         title: "Best Capstone Project – BSIT NU Bulacan",
         images: ["assets/images/awards/best-capstone-1.jpg", "assets/images/awards/best-capstone-2.jpg"],
         description: "Recognized for having the Best Capstone Project in the BSIT program at National University – Bulacan, selected from all graduating groups in the batch."
@@ -646,27 +909,16 @@ function openAwardModal(awardId) {
         console.error('Award not found:', awardId);
         return;
     }
+
+    // Morph from clicked card
+    setModalOrigin(modal, window.event || event);
     
     // Build images HTML - support both single image and multiple images
     let imagesHTML = '';
     if (award.images && award.images.length > 0) {
-        // Multiple images
-        imagesHTML = `
-            <div class="project-modal-images">
-                ${award.images.map((img, index) => `
-                    <div class="project-modal-image">
-                        <img src="${img}" alt="${award.title} - Image ${index + 1}">
-                    </div>
-                `).join('')}
-            </div>
-        `;
+        imagesHTML = buildModalCarousel(award.images, award.title);
     } else if (award.image) {
-        // Single image
-        imagesHTML = `
-            <div class="project-modal-image">
-                <img src="${award.image}" alt="${award.title}">
-            </div>
-        `;
+        imagesHTML = buildModalCarousel([award.image], award.title);
     }
     
     modalBody.innerHTML = `
@@ -682,6 +934,7 @@ function openAwardModal(awardId) {
     
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    initModalCarousel(modal);
 }
 
 function closeAwardModal() {
