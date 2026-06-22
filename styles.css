@@ -459,7 +459,6 @@ section:last-of-type::after {
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5));
 }
 
 .avatar-emoji {
