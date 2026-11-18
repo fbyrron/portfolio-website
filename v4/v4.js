@@ -352,8 +352,8 @@ document.querySelectorAll('.project-meta > div[role="button"]').forEach(trigger 
 
 function openRecognitionDialog(card) {
     const heading = card.querySelector('h3');
-    const mainImage = card.querySelector('img');
     const isCredential = card.classList.contains('credential-card');
+    const mainImage = card.querySelector(isCredential ? '.credential-art' : ':scope > img');
     const title = heading?.textContent.trim() || 'Recognition';
     const description = isCredential
         ? card.querySelector(':scope > div:last-child > p')?.textContent.trim()
