@@ -148,12 +148,12 @@ const detailDialog = document.querySelector('.detail-dialog');
 const detailDialogContent = detailDialog?.querySelector('.detail-dialog-content');
 const detailDialogClose = detailDialog?.querySelector('.detail-dialog-close');
 const awardDetailImages = {
-    '3rd Golden Sphere Awards': ['../v2/assets/images/awards/golden-sphere-2.jpg'],
-    'Best Capstone Project': ['../v2/assets/images/awards/best-capstone-2.jpg'],
-    'Magna Cum Laude': ['../v2/assets/images/awards/magna2.jpg'],
-    'AMY Innovation Awards 2024 – 2nd Place': ['../v2/assets/images/awards/amy2.jpg', '../v2/assets/images/awards/amy3.jpg'],
-    'AppCon 2023': ['../v2/assets/images/awards/appcon2.jpg', '../v2/assets/images/awards/appcon3.jpg'],
-    'AWS - Pointwest Gen AI Hackathon – Finalist': ['../v2/assets/images/awards/genai2.jpg', '../v2/assets/images/awards/genai3.jpg', '../v2/assets/images/awards/genai4.jpg']
+    '3rd Golden Sphere Awards': ['assets/images/awards/golden-sphere-2.jpg'],
+    'Best Capstone Project': ['assets/images/awards/best-capstone-2.jpg'],
+    'Magna Cum Laude': ['assets/images/awards/magna2.jpg'],
+    'AMY Innovation Awards 2024 – 2nd Place': ['assets/images/awards/amy2.jpg', 'assets/images/awards/amy3.jpg'],
+    'AppCon 2023': ['assets/images/awards/appcon2.jpg', 'assets/images/awards/appcon3.jpg'],
+    'AWS - Pointwest Gen AI Hackathon – Finalist': ['assets/images/awards/genai2.jpg', 'assets/images/awards/genai3.jpg', 'assets/images/awards/genai4.jpg']
 };
 let detailDialogOpener = null;
 
@@ -243,12 +243,12 @@ function openDetailDialog({ eyebrow, title, image, imageAlt, description, tags =
 }
 
 const actualProjectScreenshots = {
-    'Ecommunity.ph': ['../v2/assets/images/projects/ecommunity.jpg'],
-    'iNUvation Voting System': ['../v2/assets/images/projects/inuvation1.jpg', '../v2/assets/images/projects/inuvation2.jpg'],
-    'HydroGrowth': ['../v2/assets/images/projects/hydrogrowth.jpg'],
-    'Medicine Vending Machine': ['../v2/assets/images/projects/medicine-vending1.jpg', '../v2/assets/images/projects/medicine-vending2.jpg'],
-    'Bldg126': ['../v2/assets/images/projects/bldg126.jpg'],
-    'Merchandise POS': ['../v2/assets/images/projects/merchandise-pos1.jpg', '../v2/assets/images/projects/merchandise-pos2.jpg', '../v2/assets/images/projects/merchandise-pos3.jpg'],
+    'Ecommunity.ph': ['assets/images/projects/ecommunity.jpg'],
+    'iNUvation Voting System': ['assets/images/projects/inuvation1.jpg', 'assets/images/projects/inuvation2.jpg'],
+    'HydroGrowth': ['assets/images/projects/hydrogrowth.jpg'],
+    'Medicine Vending Machine': ['assets/images/projects/medicine-vending1.jpg', 'assets/images/projects/medicine-vending2.jpg'],
+    'Bldg126': ['assets/images/projects/bldg126.jpg'],
+    'Merchandise POS': ['assets/images/projects/merchandise-pos1.jpg', 'assets/images/projects/merchandise-pos2.jpg', 'assets/images/projects/merchandise-pos3.jpg'],
     'LoanLedger': ['../assets/images/projects/loan-ledger.png'],
     'SprintTrackerNest': ['assets/sprinttrackernest-actual.png']
 };
