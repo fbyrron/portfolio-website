@@ -166,7 +166,7 @@ function appendDialogLink(container, href, label) {
     container.append(link);
 }
 
-function openDetailDialog({ eyebrow, title, image, imageAlt, description, tags = [], links = [], extraImages = [], extraImagesLabel }, opener) {
+function openDetailDialog({ eyebrow, title, image, imageAlt, issuerLogo, description, tags = [], links = [], extraImages = [], extraImagesLabel }, opener) {
     if (!detailDialog || !detailDialogContent || !detailDialogClose || detailDialog.open) return;
 
     detailDialogOpener = opener;
@@ -175,7 +175,16 @@ function openDetailDialog({ eyebrow, title, image, imageAlt, description, tags =
 
     const label = document.createElement('p');
     label.className = 'detail-dialog-eyebrow';
-    label.textContent = eyebrow;
+    if (issuerLogo) {
+        const issuerImage = document.createElement('img');
+        issuerImage.className = 'detail-dialog-issuer-logo';
+        issuerImage.src = issuerLogo;
+        issuerImage.alt = '';
+        label.classList.add('detail-dialog-eyebrow-with-logo');
+        label.append(issuerImage, document.createTextNode(eyebrow));
+    } else {
+        label.textContent = eyebrow;
+    }
     const heading = document.createElement('h2');
     heading.id = 'detail-dialog-title';
     heading.textContent = title;
@@ -369,6 +378,7 @@ function openRecognitionDialog(card) {
             'University Academic Excellence Benefit': 'Awarded the University Academic Excellence Benefit (UAEB), a scholarship covering 100% of tuition and miscellaneous fees.'
         })[title] || card.querySelector('p')?.textContent.trim();
     const issuer = isCredential ? card.querySelector('.credential-top span')?.textContent.trim() : null;
+    const issuerLogo = isCredential ? card.querySelector('.credential-top img')?.src : null;
     const verifyLink = isCredential ? card.querySelector('a[href]') : null;
     const secondaryImages = (awardDetailImages[title] || []).map(src => ({ src, alt: `${title} additional recognition photo` }));
 
@@ -377,6 +387,7 @@ function openRecognitionDialog(card) {
         title,
         image: mainImage?.src,
         imageAlt: mainImage?.alt,
+        issuerLogo,
         description,
         tags: isCredential ? [] : ['Award & recognition'],
         extraImages: secondaryImages,

@@ -125,7 +125,7 @@ body.pointer-active .cursor-glow { opacity: 1; }
     grid-template-columns: minmax(0,1.05fr) minmax(360px,.95fr);
     gap: clamp(42px,8vw,130px);
     overflow: hidden;
-    padding: 142px max(var(--gutter),calc((100vw - var(--max-width))/2)) 98px;
+    padding: clamp(92px,12svh,142px) max(var(--gutter),calc((100vw - var(--max-width))/2)) clamp(64px,8svh,98px);
     background:
         radial-gradient(ellipse at 75% 34%,rgba(113,81,215,.12),transparent 42%),
         radial-gradient(ellipse at 32% 100%,rgba(58,65,112,.09),transparent 36%),
@@ -194,7 +194,7 @@ body.pointer-active .cursor-glow { opacity: 1; }
 .hero-scroll > span:last-child { color: #b9a6ff; font-size: .88rem; }
 .hero-coordinates { position: absolute; right: var(--gutter); bottom: 35px; color: rgba(255,255,255,.24); font-size: .52rem; letter-spacing: .15em; }
 
-.hero-profile-stack { width: min(100%,560px); min-height: 610px; justify-self: end; isolation: isolate; }
+.hero-profile-stack { width: min(100%,560px); min-height: 500px; justify-self: end; isolation: isolate; }
 .hero-portrait-card { position: absolute; z-index: 3; top: 5%; right: 17%; width: min(68%,365px); aspect-ratio: .79; overflow: visible; margin: 0; background: transparent; }
 .hero-portrait-card > img { position: absolute; top: 7%; left: 12%; width: 76%; height: 86%; border: 1px solid rgba(255,255,255,.34); border-radius: 18px; background: #15151b; box-shadow: 0 28px 75px rgba(0,0,0,.46); object-fit: cover; object-position: center 27%; opacity: 0; transform: translateX(28%) scale(.86) rotate(7deg); transition: opacity 650ms ease,transform 750ms var(--ease); }
 .hero-portrait-card > img.is-active { z-index: 3; opacity: 1; transform: translateX(0) scale(1) rotate(0); }
@@ -376,9 +376,9 @@ body.pointer-active .cursor-glow { opacity: 1; }
 }
 
 @media (min-width: 681px) and (max-width: 920px) {
-    .hero { min-height: auto; grid-template-columns: minmax(0,1fr) minmax(300px,.8fr); gap: 36px; padding-top: 145px; }
+    .hero { grid-template-columns: minmax(0,1fr) minmax(300px,.8fr); gap: 36px; }
     .hero h1 { font-size: clamp(3.35rem,7.4vw,5.35rem); }
-    .hero-profile-stack { min-height: 570px; }
+    .hero-profile-stack { min-height: 500px; }
     .trust-strip { grid-template-columns: 1fr; justify-items: center; gap: 12px; padding-block: 20px; }
     .trust-caption { justify-self: center; }
     .manifesto-grid { gap: 50px; }
@@ -601,6 +601,8 @@ body.pointer-active .cursor-glow { opacity: 1; }
 .detail-dialog-close { position: sticky; z-index: 3; top: 14px; float: right; display: grid; width: 40px; height: 40px; margin: 14px 14px -54px 0; place-items: center; border: 1px solid rgba(255,255,255,.16); border-radius: 50%; color: #fff; background: rgba(8,8,11,.72); font-size: 1.5rem; line-height: 1; cursor: pointer; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .detail-dialog-content { padding: 20px 20px 26px; }
 .detail-dialog-eyebrow { margin: 3px 52px 10px 2px; color: #b7a4f6; font-size: .52rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.detail-dialog-eyebrow-with-logo { display: flex; align-items: center; gap: 8px; }
+.detail-dialog-issuer-logo { width: 25px; height: 25px; flex: 0 0 25px; padding: 3px; border: 1px solid rgba(255,255,255,.12); border-radius: 6px; background: rgba(255,255,255,.94); object-fit: contain; }
 .detail-dialog-content h2 { margin: 0 50px 18px 2px; font-size: clamp(1.6rem,4vw,2.5rem); font-weight: 600; letter-spacing: -.055em; line-height: 1.1; }
 .detail-dialog-image { display: block; width: 100%; max-height: min(53vh,560px); object-fit: contain; border: 1px solid rgba(255,255,255,.09); border-radius: 14px; background: #08090c; }
 .detail-dialog-gallery { margin-top: 20px; }
