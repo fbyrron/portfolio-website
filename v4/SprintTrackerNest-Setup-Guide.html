@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Set up SprintTrackerNest &middot; Install Guide</title>
+<meta name="description" content="Install SprintTrackerNest on any desktop in about 3 minutes. One .vsix file. No Python or Node.js needed." />
+<style>
+  :root {
+    --bg: #f7f7fa;
+    --ink: #0d0f14;
+    --ink-2: #353b48;
+    --muted: #646b7a;
+    --line: #e5e6ee;
+    --card: #ffffff;
+    --accent: #6d3cf0;
+    --accent-ink: #5527d6;
+    --accent-soft: #f1ecff;
+    --ok: #15803d;
+    --ok-soft: #e7f6ec;
+    --no: #b91c1c;
+    --no-soft: #fdeeee;
+    --radius: 20px;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 10px 30px rgba(16, 24, 40, .06);
+    --font: "Segoe UI Variable Display", "Segoe UI", -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, system-ui, sans-serif;
+    --mono: "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+  .wrap { width: min(1160px, 100% - 48px); margin-inline: auto; }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 16px; top: 16px; background: #fff; padding: 8px 14px; border-radius: 8px; z-index: 10; }
+  code, kbd { font-family: var(--mono); font-size: .88em; }
+  kbd { background: #fff; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 1px 6px; color: var(--ink-2); }
+  .inline-code { background: #eeedf5; border-radius: 6px; padding: 2px 6px; color: var(--ink-2); white-space: nowrap; }
+
+  /* ---------- Nav ---------- */
+  .nav { position: sticky; top: 0; z-index: 5; background: rgba(247, 247, 250, .82); backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid rgba(229, 230, 238, .7); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; letter-spacing: -.01em; color: var(--ink); text-decoration: none; }
+  .brand-mark { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #8b5cf6, #5b21b6); box-shadow: 0 4px 12px rgba(109, 60, 240, .35); }
+  .brand small { font-weight: 500; color: var(--muted); padding-left: 10px; border-left: 1px solid var(--line); }
+  .nav-links { display: flex; gap: 26px; font-size: 14px; }
+  .nav-links a { color: var(--ink-2); text-decoration: none; }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ---------- Buttons ---------- */
+  .btn { display: inline-flex; align-items: center; gap: 10px; height: 50px; padding: 0 24px; border-radius: 999px; font: 600 16px/1 var(--font); text-decoration: none; border: 0; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+  .btn-primary { background: var(--ink); color: #fff; box-shadow: 0 8px 20px rgba(13, 15, 20, .18); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(13, 15, 20, .24); }
+  .btn-ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px #d6d7e0; }
+  .btn-ghost:hover { background: #fff; }
+  .btn svg { flex: none; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 88px 0 72px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; letter-spacing: .02em; color: var(--accent-ink); background: var(--accent-soft); padding: 6px 12px; border-radius: 999px; }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  h1 { font-size: clamp(42px, 5.4vw, 66px); line-height: 1.03; letter-spacing: -.035em; margin: 20px 0 20px; font-weight: 700; }
+  h1 .grad { background: linear-gradient(90deg, #6d3cf0, #b44cf0 60%, #ea5a9c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { font-size: 20px; color: var(--ink-2); max-width: 32ch; margin: 0 0 32px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .filemeta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 22px; font-size: 13px; color: var(--muted); }
+  .filemeta span { display: inline-flex; align-items: center; gap: 6px; }
+  .filemeta code { font-size: 12px; }
+
+  .hero-visual { position: relative; border-radius: 28px; padding: 44px 40px 40px; background:
+      radial-gradient(120% 90% at 100% 0%, rgba(234, 90, 156, .28), transparent 55%),
+      radial-gradient(110% 90% at 0% 100%, rgba(109, 60, 240, .35), transparent 55%),
+      #15121f; box-shadow: 0 40px 80px -30px rgba(40, 20, 90, .55); overflow: hidden; }
+  .hero-visual::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); pointer-events: none; }
+  .hero-visual .k-sidebar { border-radius: 14px; box-shadow: 0 20px 50px rgba(0, 0, 0, .45); max-width: 340px; margin-inline: auto; }
+  .float-file { position: absolute; top: 24px; left: 22px; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, .96); color: var(--ink); border-radius: 14px; padding: 10px 14px 10px 10px; font-size: 13px; font-weight: 600; box-shadow: 0 14px 30px rgba(0, 0, 0, .3); transform: rotate(-4deg); }
+  .float-file small { display: block; font-weight: 500; color: var(--muted); font-size: 11px; }
+  .vsix-icon { width: 34px; height: 40px; border-radius: 6px; background: linear-gradient(160deg, #8b5cf6, #5b21b6); display: grid; place-items: center; color: #fff; font: 700 9px/1 var(--font); letter-spacing: .04em; position: relative; }
+  .float-status { margin: 22px auto 0; max-width: 340px; display: flex; align-items: center; gap: 12px; height: 30px; padding: 0 12px; border-radius: 8px; background: #7234d4; color: #fff; font-size: 12.5px; box-shadow: 0 12px 30px rgba(114, 52, 212, .45); }
+  .float-status .sep { opacity: .55; }
+
+  /* ---------- Sections ---------- */
+  section.block { padding: 96px 0; }
+  .sec-head { max-width: 720px; margin-bottom: 48px; }
+  .kicker { font-size: 14px; font-weight: 650; color: var(--accent-ink); letter-spacing: .02em; margin: 0 0 10px; }
+  h2 { font-size: clamp(32px, 3.6vw, 46px); line-height: 1.08; letter-spacing: -.028em; margin: 0 0 14px; font-weight: 700; }
+  .sec-head p { color: var(--ink-2); font-size: 19px; margin: 0; }
+
+  /* Requirements */
+  .req-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .req { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 32px; box-shadow: var(--shadow); }
+  .req h3 { margin: 0 0 18px; font-size: 20px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+  .req ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .req li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; }
+  .req li b { font-weight: 600; }
+  .req li span.sub { display: block; color: var(--muted); font-size: 14.5px; }
+  .tick, .cross { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+  .tick { background: var(--ok-soft); color: var(--ok); }
+  .cross { background: var(--no-soft); color: var(--no); }
+  .req.no li b { text-decoration: line-through; text-decoration-color: rgba(185, 28, 28, .45); text-decoration-thickness: 2px; }
+
+  /* Steps */
+  .steps { counter-reset: step; }
+  .step { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 64px; align-items: center; padding: 56px 0; border-top: 1px solid var(--line); }
+  .step:first-child { border-top: 0; padding-top: 8px; }
+  .step-num { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-ink); }
+  .step-num i { font-style: normal; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: var(--ink); color: #fff; font-size: 14px; letter-spacing: 0; }
+  .step h3 { font-size: 30px; line-height: 1.12; letter-spacing: -.022em; margin: 16px 0 12px; }
+  .step p { color: var(--ink-2); margin: 0 0 14px; }
+  .step ol.mini-list { margin: 0 0 16px; padding-left: 20px; color: var(--ink-2); display: grid; gap: 6px; }
+  .tip { display: flex; gap: 12px; align-items: flex-start; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; font-size: 15px; color: var(--ink-2); margin-top: 18px; }
+  .tip svg { color: var(--accent); flex: none; margin-top: 2px; }
+  .tip.warn svg { color: #b45309; }
+  .visual { position: relative; border-radius: 26px; padding: 40px; min-height: 340px; display: grid; place-items: center; background: linear-gradient(160deg, #fbfaff 0%, #efeaff 100%); border: 1px solid #e7e2fb; overflow: hidden; }
+  .visual.alt { background: linear-gradient(160deg, #fdf8fb 0%, #f6e9f2 100%); border-color: #f0dfe9; }
+  .visual.cool { background: linear-gradient(160deg, #f6fbff 0%, #e6f0fb 100%); border-color: #dde9f6; }
+
+  /* Code block + tabs */
+  .code { margin-top: 16px; border-radius: 14px; background: #12141b; color: #e6e6ef; overflow: hidden; box-shadow: var(--shadow); }
+  .code-top { display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 10px; border-bottom: 1px solid #262936; }
+  .tabs { display: flex; gap: 4px; }
+  .tab { background: transparent; border: 0; color: #9aa0b4; font: 600 13px/1 var(--font); padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+  .tab[aria-selected="true"] { background: #232633; color: #fff; }
+  .copy { display: inline-flex; align-items: center; gap: 6px; background: #232633; color: #cfd3e1; border: 0; border-radius: 8px; padding: 7px 10px; font: 600 12px/1 var(--font); cursor: pointer; }
+  .copy:hover { background: #2d3142; color: #fff; }
+  .copy.copied { background: #14532d; color: #dcfce7; }
+  .code pre { margin: 0; padding: 16px 18px; font: 14px/1.6 var(--mono); overflow-x: auto; }
+  .code .prompt { color: #7c8299; user-select: none; }
+
+  /* ---------- Shared dark "editor" mini UI ---------- */
+  .mini { width: 100%; max-width: 440px; background: #1f1f1f; color: #cccccc; border-radius: 12px; font: 13px/1.45 "Segoe UI", -apple-system, system-ui, sans-serif; box-shadow: 0 24px 50px -16px rgba(30, 20, 70, .45), 0 0 0 1px rgba(0, 0, 0, .25); overflow: hidden; position: relative; }
+  .mini-head { display: flex; align-items: center; justify-content: space-between; height: 36px; padding: 0 12px 0 16px; font-size: 11px; font-weight: 600; letter-spacing: .06em; color: #bbbbbb; background: #181818; border-bottom: 1px solid #2b2b2b; }
+  .mini-head .icons { display: flex; gap: 10px; color: #9d9d9d; }
+  .mini-head .icons .on { color: #fff; background: #3a3a3a; border-radius: 5px; }
+  .mini-search { margin: 12px 14px; height: 28px; border: 1px solid #3c3c3c; background: #2a2a2a; border-radius: 4px; color: #8a8a8a; display: flex; align-items: center; padding: 0 10px; font-size: 12.5px; }
+  .ext-row { display: grid; grid-template-columns: 38px 1fr; gap: 10px; padding: 10px 16px; align-items: center; }
+  .ext-row .ico { width: 38px; height: 38px; border-radius: 6px; background: #2d2d2d; }
+  .ext-row .l1 { height: 9px; width: 60%; background: #3a3a3a; border-radius: 4px; margin-bottom: 7px; }
+  .ext-row .l2 { height: 7px; width: 85%; background: #2f2f2f; border-radius: 4px; }
+  .menu { position: absolute; right: 14px; top: 34px; width: 250px; background: #252526; border: 1px solid #454545; border-radius: 8px; padding: 5px; box-shadow: 0 12px 28px rgba(0, 0, 0, .5); font-size: 13px; }
+  .menu div { padding: 6px 12px; border-radius: 4px; color: #cccccc; display: flex; justify-content: space-between; }
+  .menu hr { border: 0; border-top: 1px solid #454545; margin: 4px 6px; }
+  .menu .hl { background: #0078d4; color: #fff; }
+  .cursor { position: absolute; right: 40px; top: 190px; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .5)); }
+
+  .palette { width: 100%; max-width: 420px; background: #252526; border: 1px solid #3c3c3c; border-radius: 10px; padding: 8px; box-shadow: 0 24px 50px -16px rgba(30, 20, 70, .45); color: #ccc; font: 13px/1.45 "Segoe UI", system-ui, sans-serif; }
+  .palette .title { text-align: center; font-size: 12px; color: #bbb; padding: 2px 0 8px; }
+  .palette .field { height: 30px; border: 1px solid #0078d4; background: #313131; border-radius: 4px; display: flex; align-items: center; padding: 0 10px; color: #e7e7e7; gap: 2px; }
+  .palette .field .ph { color: #8a8a8a; }
+  .palette .caret { width: 1px; height: 16px; background: #fff; animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .palette .hint { font-size: 12px; color: #9d9d9d; padding: 8px 4px 2px; }
+  .palette .opt { padding: 6px 10px; border-radius: 4px; display: flex; justify-content: space-between; margin-top: 4px; }
+  .palette .opt.hl { background: #04395e; color: #fff; box-shadow: inset 0 0 0 1px #0078d4; }
+  .palette .opt small { color: #9d9d9d; }
+  .palette .dots { letter-spacing: 3px; color: #e7e7e7; font-size: 11px; }
+  .stack { display: grid; gap: 14px; width: 100%; justify-items: center; }
+  .stack-label { font: 600 11px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: #6c5fb0; width: 100%; max-width: 420px; display: flex; align-items: center; gap: 8px; margin-bottom: -6px; }
+  .stack-label b { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; font-size: 10px; letter-spacing: 0; }
+
+  .reload-row { display: flex; align-items: center; gap: 22px; width: 100%; justify-content: center; }
+  .act-strip { background: #181818; border-radius: 12px; padding: 10px 7px; display: grid; gap: 8px; color: #858585; box-shadow: 0 24px 50px -16px rgba(30, 20, 70, .45); }
+  .act-strip span { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 8px; }
+  .act-strip .on { color: #fff; background: #2f2f2f; position: relative; }
+  .act-strip .on::after { content: ""; position: absolute; inset: -5px; border-radius: 12px; border: 2px solid #8b5cf6; animation: ring 2s ease-out infinite; }
+  @keyframes ring { 0% { opacity: 1; transform: scale(.9); } 100% { opacity: 0; transform: scale(1.25); } }
+
+  .browser { width: 100%; max-width: 440px; background: #fff; border-radius: 12px; box-shadow: 0 18px 40px -18px rgba(20, 40, 80, .35), 0 0 0 1px #dfe5ee; overflow: hidden; }
+  .browser-top { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #f1f3f6; }
+  .browser-top .lights { display: flex; gap: 6px; }
+  .browser-top .lights i { width: 10px; height: 10px; border-radius: 50%; background: #d6dae1; }
+  .url { flex: 1; background: #fff; border-radius: 999px; padding: 6px 12px; font: 12.5px/1.2 var(--mono); color: #4b5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: inset 0 0 0 1px #e3e7ee; }
+  .url mark { background: #fde68a; color: #111; border-radius: 4px; padding: 1px 4px; font-weight: 700; }
+  .browser-body { padding: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .browser-body div { height: 64px; border-radius: 8px; background: #f3f5f8; }
+  .arrow-down { color: #6c5fb0; display: grid; place-items: center; margin: -2px 0; }
+
+  .toast { width: 100%; max-width: 420px; background: #252526; color: #ccc; border: 1px solid #3c3c3c; border-radius: 8px; padding: 14px 14px; display: grid; grid-template-columns: 20px 1fr 16px; gap: 10px; align-items: start; font: 13px/1.45 "Segoe UI", system-ui, sans-serif; box-shadow: 0 24px 50px -16px rgba(30, 20, 70, .45); }
+  .toast .i { color: #3794ff; }
+  .toast small { display: block; color: #8f8f8f; margin-top: 6px; font-size: 11.5px; }
+
+  /* ---------- Security ---------- */
+  .dark { background: #0d0f14; color: #e8e9f0; }
+  .dark .kicker { color: #b9a4ff; }
+  .dark .sec-head p { color: #b3b7c6; }
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 18px; align-items: stretch; margin-bottom: 40px; }
+  .node { background: #161922; border: 1px solid #262a37; border-radius: 20px; padding: 26px; }
+  .node .ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: #221d36; color: #c4b5fd; margin-bottom: 16px; }
+  .node.vault { background: linear-gradient(160deg, #241a47, #161922 70%); border-color: #3b2f6b; }
+  .node.vault .ic { background: #6d3cf0; color: #fff; box-shadow: 0 8px 24px rgba(109, 60, 240, .5); }
+  .node h4 { margin: 0 0 6px; font-size: 18px; letter-spacing: -.01em; color: #fff; }
+  .node p { margin: 0; color: #a8adbd; font-size: 15px; }
+  .node .os { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .node .os span { font-size: 12px; padding: 4px 9px; border-radius: 999px; background: rgba(255, 255, 255, .07); color: #d8d4f0; }
+  .link { display: grid; place-items: center; color: #5b5f73; }
+  .table-wrap { border: 1px solid #262a37; border-radius: 20px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+  th, td { text-align: left; padding: 16px 22px; border-bottom: 1px solid #222634; vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #8b90a3; font-weight: 600; background: #12141b; }
+  tr:last-child td { border-bottom: 0; }
+  td b { color: #fff; font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .pill.lock { background: rgba(109, 60, 240, .2); color: #c9b8ff; }
+  .pill.plain { background: rgba(255, 255, 255, .07); color: #c3c7d4; }
+  .never { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; align-items: center; }
+  .never > span:first-child { color: #8b90a3; font-size: 14px; margin-right: 6px; }
+  .never .chip { display: inline-flex; gap: 8px; align-items: center; padding: 8px 14px; border-radius: 999px; background: #161922; border: 1px solid #262a37; font-size: 14px; color: #d6d8e2; }
+  .never .chip svg { color: #f87171; }
+  .callout { margin-top: 28px; display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; background: linear-gradient(90deg, rgba(109, 60, 240, .18), rgba(109, 60, 240, .04)); border: 1px solid #3b2f6b; border-radius: 18px; padding: 20px 24px; }
+  .callout .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: #6d3cf0; color: #fff; }
+  .callout p { margin: 0; color: #d8d4f0; }
+  .callout b { color: #fff; }
+
+  /* ---------- IDE mock (faithful to the real sidebar) ---------- */
+  .tour { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: start; }
+  .k-ide { background: #1f1f1f; border-radius: 14px; overflow: hidden; color: #cccccc; font: 13px/1.4 "Segoe UI", -apple-system, system-ui, sans-serif; box-shadow: 0 40px 90px -30px rgba(13, 15, 20, .55), 0 0 0 1px rgba(13, 15, 20, .12); }
+  .k-title { height: 40px; background: #181818; border-bottom: 1px solid #2b2b2b; display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; gap: 14px; padding: 0 0 0 12px; }
+  .k-logo { width: 22px; height: 22px; border-radius: 6px; background: #7c3aed; display: grid; place-items: center; color: #fff; }
+  .k-menus { display: flex; gap: 16px; color: #cccccc; font-size: 13.5px; }
+  .k-cmd { width: 320px; height: 26px; border-radius: 6px; background: #2a2a2a; border: 1px solid #3a3a3a; display: flex; align-items: center; justify-content: center; gap: 8px; color: #9d9d9d; font-size: 12.5px; }
+  .k-win { display: flex; justify-self: end; }
+  .k-win span { width: 46px; height: 40px; display: grid; place-items: center; color: #cccccc; }
+  .k-body { display: grid; grid-template-columns: 52px 360px minmax(0, 1fr); }
+  .k-act { background: #181818; border-right: 1px solid #2b2b2b; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px 0; color: #858585; }
+  .k-act span { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 9px; }
+  .k-act .on { color: #fff; background: #2f2f2f; }
+  .k-act .spacer { flex: 1; height: auto; }
+  .k-act .badge { position: relative; }
+  .k-act .badge::after { content: ""; position: absolute; right: 5px; bottom: 5px; width: 13px; height: 13px; border-radius: 50%; background: #0078d4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.2 2.2 4.6-4.8' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/11px no-repeat; box-shadow: 0 0 0 2px #181818; }
+
+  .k-sidebar { background: #1f1f1f; border-right: 1px solid #2b2b2b; color: #cccccc; font: 13px/1.4 "Segoe UI", -apple-system, system-ui, sans-serif; }
+  .k-sb-title { display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 12px 0 20px; font-size: 11px; letter-spacing: .04em; color: #bbbbbb; }
+  .k-view { border-top: 1px solid #2f2f2f; padding-bottom: 12px; }
+  .k-view:first-of-type { border-top: 0; }
+  .k-view-head { display: flex; align-items: center; justify-content: space-between; height: 30px; padding: 0 12px 0 6px; font-size: 11px; font-weight: 700; letter-spacing: .03em; color: #cccccc; }
+  .k-view-head > span { display: flex; align-items: center; gap: 4px; }
+  .k-card { position: relative; margin: 4px 12px 10px; background: #2a2a2a; border: 1px solid #333333; border-radius: 9px; padding: 16px 18px; }
+  .k-chip { display: inline-block; background: #3d3d3d; color: #ededed; font-weight: 600; font-size: 12.5px; padding: 4px 12px; border-radius: 999px; }
+  .k-big { display: flex; align-items: baseline; gap: 8px; margin: 12px 0 14px; }
+  .k-big b { font-size: 34px; line-height: 1; font-weight: 600; color: #f2f2f2; }
+  .k-big span { font-size: 15px; color: #a9a9a9; }
+  .k-label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; letter-spacing: .07em; color: #a9a9a9; margin-bottom: 8px; }
+  .k-label em { font-style: normal; font-weight: 500; letter-spacing: 0; font-size: 12.5px; color: #cfcfcf; }
+  .k-bar { height: 6px; border-radius: 3px; background: #3a3a3a; overflow: hidden; }
+  .k-bar i { display: block; height: 100%; border-radius: 3px; background: #1a7fd6; }
+  .k-rows { margin-top: 16px; display: grid; gap: 8px; font-size: 13px; }
+  .k-rows div { display: flex; justify-content: space-between; gap: 10px; }
+  .k-rows span { color: #a0a0a0; }
+  .k-rows b { font-weight: 400; color: #dcdcdc; }
+  .k-health { display: flex; align-items: center; justify-content: space-between; }
+  .k-badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px 5px 10px; border-radius: 999px; font-weight: 600; font-size: 14px; color: #f07178; background: rgba(229, 72, 77, .12); border: 1px solid rgba(229, 72, 77, .55); }
+  .k-info { color: #a0a0a0; }
+  .k-tickets-head { margin: 4px 20px 8px; }
+  .k-tickets-bar { margin: 0 20px 12px; }
+  .k-group { padding: 6px 0; }
+  .k-group-head { display: flex; align-items: center; gap: 6px; font-weight: 600; color: #dcdcdc; padding: 4px 0; }
+  .k-group-head small { color: #9d9d9d; font-weight: 400; font-size: 12.5px; }
+  .k-ticket { display: flex; gap: 10px; padding: 4px 0 4px 26px; white-space: nowrap; overflow: hidden; }
+  .k-ticket code { color: #3794ff; font-size: 12px; flex: none; }
+  .k-ticket span { overflow: hidden; text-overflow: ellipsis; color: #d4d4d4; }
+  .k-account { display: flex; gap: 16px; align-items: center; }
+  .k-avatar { width: 44px; height: 44px; border-radius: 50%; background: #444; color: #f0f0f0; display: grid; place-items: center; font-weight: 600; font-size: 15px; flex: none; }
+  .k-account b { display: block; color: #ededed; font-size: 14.5px; }
+  .k-verified { display: flex; align-items: center; gap: 6px; color: #b5b5b5; font-size: 13px; margin: 2px 0; white-space: nowrap; }
+  .k-verified svg { color: #3fb950; }
+  .k-account small { color: #9d9d9d; font-size: 12px; }
+  .k-desc { margin: 4px 20px 10px; color: #a9a9a9; font-size: 12.5px; }
+  .k-btn { display: block; margin: 0 20px 8px; height: 28px; border-radius: 4px; text-align: center; line-height: 28px; font-size: 13px; }
+  .k-btn.primary { background: #0e639c; color: #fff; }
+  .k-btn.secondary { background: #3a3d41; color: #e7e7e7; }
+
+  .k-editor { background: #1f1f1f; display: flex; flex-direction: column; min-width: 0; }
+  .k-tabs { display: flex; height: 36px; background: #181818; border-bottom: 1px solid #2b2b2b; }
+  .k-tab { display: flex; align-items: center; gap: 8px; padding: 0 16px; font-size: 13px; color: #9d9d9d; border-right: 1px solid #2b2b2b; }
+  .k-tab.on { background: #1f1f1f; color: #ffffff; box-shadow: inset 0 1px 0 #7c3aed; }
+  .k-tab .ts { color: #4d9fe8; font-weight: 700; font-size: 10px; }
+  .k-code { padding: 14px 0; font: 13px/21px var(--mono); color: #d4d4d4; white-space: pre; overflow: hidden; opacity: .85; }
+  .k-code .ln { display: inline-block; width: 48px; text-align: right; padding-right: 20px; color: #6e7681; user-select: none; }
+  .t-k { color: #c586c0; } .t-b { color: #569cd6; } .t-s { color: #ce9178; } .t-f { color: #dcdcaa; } .t-t { color: #4ec9b0; } .t-v { color: #9cdcfe; } .t-c { color: #6a9955; }
+  .k-status { height: 26px; background: #7234d4; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; font-size: 12.5px; }
+  .k-status > div { display: flex; align-items: center; gap: 2px; }
+  .k-status span { display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; height: 26px; position: relative; }
+  .k-status .hud { background: rgba(255, 255, 255, .14); }
+  .k-status .pin { position: absolute; display: block; height: 24px; padding: 0; }
+
+  .pin { position: absolute; z-index: 2; width: 24px; height: 24px; border-radius: 50%; background: #8b5cf6; color: #fff; font: 700 12px/24px var(--font); text-align: center; box-shadow: 0 0 0 4px rgba(139, 92, 246, .35), 0 4px 10px rgba(0, 0, 0, .4); }
+  .legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .legend li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .legend li:last-child { border-bottom: 0; }
+  .legend .n { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font: 700 12px/26px var(--font); text-align: center; }
+  .legend b { display: block; font-size: 16px; letter-spacing: -.005em; }
+  .legend span { color: var(--muted); font-size: 14.5px; }
+
+  .health-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 64px; }
+  .hcard { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px; box-shadow: var(--shadow); }
+  .hcard .sw { display: inline-flex; align-items: center; gap: 8px; font-weight: 650; font-size: 14px; padding: 5px 12px 5px 9px; border-radius: 999px; }
+  .hcard .sw i { width: 10px; height: 10px; border-radius: 50%; }
+  .hcard p { margin: 12px 0 0; font-size: 14.5px; color: var(--ink-2); }
+  .sw.green { background: #e7f6ec; color: #166534; } .sw.green i { background: #22c55e; }
+  .sw.yellow { background: #fef6dc; color: #854d0e; } .sw.yellow i { background: #eab308; }
+  .sw.red { background: #fdeeee; color: #991b1b; } .sw.red i { background: #ef4444; }
+
+  /* ---------- Help ---------- */
+  .help-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 24px; align-items: start; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 32px; box-shadow: var(--shadow); }
+  .panel h3 { margin: 0 0 10px; font-size: 22px; letter-spacing: -.015em; }
+  .panel p { color: var(--ink-2); margin: 0 0 12px; }
+  details { border-top: 1px solid var(--line); }
+  details:first-of-type { border-top: 0; }
+  summary { list-style: none; cursor: pointer; padding: 18px 0; font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary .plus { width: 26px; height: 26px; border-radius: 50%; background: #f1f1f6; display: grid; place-items: center; flex: none; transition: transform .2s ease; }
+  details[open] summary .plus { transform: rotate(45deg); }
+  details > div { padding: 0 0 18px; color: var(--ink-2); font-size: 15.5px; }
+  details > div p { margin: 0 0 8px; }
+
+  footer { padding: 40px 0 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1080px) {
+    .tour { grid-template-columns: 1fr; }
+    .legend { grid-template-columns: 1fr 1fr; column-gap: 32px; }
+    .k-body { grid-template-columns: 52px 360px minmax(0, 1fr); }
+  }
+  @media (max-width: 920px) {
+    .hero .wrap, .step, .req-grid, .help-grid { grid-template-columns: 1fr; }
+    .step { gap: 32px; }
+    .flow { grid-template-columns: 1fr; }
+    .link { transform: rotate(90deg); }
+    .health-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .k-editor, .k-cmd { display: none; }
+    .k-body { grid-template-columns: 52px minmax(0, 1fr); }
+    .k-title { grid-template-columns: auto 1fr auto; }
+  }
+  @media (max-width: 560px) {
+    .wrap { width: calc(100% - 32px); }
+    .legend { grid-template-columns: 1fr; }
+    .health-grid { grid-template-columns: 1fr; }
+    .k-menus, .k-status .opt { display: none; }
+    .visual { padding: 24px; }
+    th, td { padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#steps">Skip to the steps</a>
+
+<!-- SVG sprite: icons referenced with <use>. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+    <symbol id="i-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3"/><path d="m17 6 3 3"/><path d="m14 9 2 2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 0 0 0-9h-1.8A7 7 0 1 0 4 15.2"/><path d="m8 17 3 3 5-5"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4L21 8"/><path d="M21 3v5h-5"/></symbol>
+    <symbol id="i-chev-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-files" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h7l4 4v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M5 7v13a1 1 0 0 0 1 1h10"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="7" r="2"/><path d="M6 7v10"/><path d="M18 9c0 5-7 3-11.5 8.5"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="4" width="7.5" height="7.5" rx="1.2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.2"/><rect x="12.5" y="13.5" width="7.5" height="7.5" rx="1.2"/><rect x="13" y="3" width="7.5" height="7.5" rx="1.2" transform="rotate(12 16.7 6.7)"/></symbol>
+    <symbol id="i-ghost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5a7.5 7.5 0 0 0-7.5 7.5v11l2.8-2.2 2.4 2.2L12 18.8l2.3 2.2 2.4-2.2 2.8 2.2V10A7.5 7.5 0 0 0 12 2.5z"/><path d="M9.5 10h.01M14.5 10h.01"/></symbol>
+    <symbol id="i-tree" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4h16M8 4v15M8 9.5h12M8 14.5h12M8 19h12"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="10" r="3.2"/><path d="M6.5 19a6.5 6.5 0 0 1 11 0"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="6.2" stroke-width="1.6"/><circle cx="12" cy="12" r="8" stroke-width="3" stroke-dasharray="3.1 3.2"/><circle cx="12" cy="12" r="2.4" stroke-width="1.6"/></symbol>
+    <symbol id="i-remote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12.5a7 7 0 0 1 14 0M8 15a4 4 0 0 1 8 0"/><circle cx="12" cy="18" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-verified" viewBox="0 0 16 16"><g fill="currentColor"><rect x="2.5" y="2.5" width="11" height="11" rx="3"/><rect x="2.5" y="2.5" width="11" height="11" rx="3" transform="rotate(45 8 8)"/></g><path d="M5.3 8.2l1.8 1.8 3.6-3.8" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pointer" viewBox="0 0 24 24"><path d="M5 3l14 8-6 1.5L10 19z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="SprintTrackerNest setup guide home">
+      <span class="brand-mark"><svg width="17" height="17"><use href="#i-rocket"/></svg></span>
+      SprintTrackerNest <small>Setup Guide</small>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#requirements">What you need</a>
+      <a href="#steps">Install</a>
+      <a href="#security">Your token</a>
+      <a href="#tour">Tour</a>
+      <a href="#help">Help</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>Install guide &middot; about 3 minutes</span>
+        <h1>Your sprint, live in the editor. <span class="grad">On any desktop.</span></h1>
+        <p class="lede">Everything ships in one file. No Python. No Node.js. No terminal needed.</p>
+        <div class="cta">
+          <a id="download" class="btn btn-primary" data-vsix href="data:application/octet-stream;base64,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" download="sprintpulse-0.1.0.vsix">
+            <svg width="20" height="20"><use href="#i-download"/></svg> Download the .vsix
+          </a>
+          <a class="btn btn-ghost" href="#steps">See the steps <svg width="18" height="18"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="filemeta">
+          <span><svg width="14" height="14"><use href="#i-files"/></svg> sprintpulse-0.1.0.vsix</span>
+          <span>30 KB</span>
+          <span>Version 0.1.0</span>
+          <span title="SHA-256: 5d46fe797a8f0f0d112dff08620cf91f82eda545ef4d7214bd438bd54033491c">SHA-256 <code>5d46fe797a8f&hellip;</code></span>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="float-file"><span class="vsix-icon">VSIX</span><span>sprintpulse-0.1.0.vsix<small>30 KB &middot; all you need</small></span></div>
+        <div class="k-sidebar" style="margin-top:40px">
+          <div class="k-view-head" style="padding-top:6px"><span><svg width="16" height="16"><use href="#i-chev-down"/></svg>CURRENT SPRINT</span><svg width="16" height="16"><use href="#i-refresh"/></svg></div>
+          <div class="k-card">
+            <span class="k-chip">HRT Apr27 3A</span>
+            <div class="k-big"><b>1</b><span>business day left</span></div>
+            <div class="k-label">TIMELINE <em>91%</em></div>
+            <div class="k-bar"><i style="width:91%"></i></div>
+          </div>
+          <div class="k-card k-health" style="margin-bottom:14px"><span class="k-badge">&#x1F534; At Risk</span><svg class="k-info" width="18" height="18"><use href="#i-info"/></svg></div>
+        </div>
+        <div class="float-status"><span>&#x1F3C3; HRT Apr27 3A</span><span class="sep">|</span><span>1d left</span><span class="sep">|</span><span>&#x1F534;</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REQUIREMENTS ================= -->
+  <section class="block" id="requirements" style="padding-top:40px">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Before you start</p>
+        <h2>One file is the whole install.</h2>
+        <p>The extension runs on the Node.js that is already built into Kiro and VS Code. It has no extra packages.</p>
+      </div>
+      <div class="req-grid">
+        <div class="req">
+          <h3><span class="tick"><svg width="14" height="14"><use href="#i-check"/></svg></span>You need</h3>
+          <ul>
+            <li><span class="tick"><svg width="14" height="14"><use href="#i-check"/></svg></span><div><b>Kiro or VS Code</b><span class="sub">Version 1.85 or later.</span></div></li>
+            <li><span class="tick"><svg width="14" height="14"><use href="#i-check"/></svg></span><div><b>The .vsix file</b><span class="sub">It is built into this page. Use the Download button.</span></div></li>
+            <li><span class="tick"><svg width="14" height="14"><use href="#i-check"/></svg></span><div><b>A Jira API token</b><span class="sub">Free to create from your Atlassian account.</span></div></li>
+            <li><span class="tick"><svg width="14" height="14"><use href="#i-check"/></svg></span><div><b>Your scrum board ID</b><span class="sub">The number at the end of your board URL.</span></div></li>
+          </ul>
+        </div>
+        <div class="req no">
+          <h3><span class="cross"><svg width="14" height="14"><use href="#i-x"/></svg></span>You don&rsquo;t need</h3>
+          <ul>
+            <li><span class="cross"><svg width="14" height="14"><use href="#i-x"/></svg></span><div><b>Python</b><span class="sub">Nothing in the extension uses it.</span></div></li>
+            <li><span class="cross"><svg width="14" height="14"><use href="#i-x"/></svg></span><div><b>Node.js or npm</b><span class="sub">The editor already includes a runtime.</span></div></li>
+            <li><span class="cross"><svg width="14" height="14"><use href="#i-x"/></svg></span><div><b>Git or the source code</b><span class="sub">The .vsix holds the compiled extension.</span></div></li>
+            <li><span class="cross"><svg width="14" height="14"><use href="#i-x"/></svg></span><div><b>Admin rights</b><span class="sub">Extensions install for your user only.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STEPS ================= -->
+  <section class="block" id="steps" style="padding-top:24px">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Install</p>
+        <h2>Six steps. About three minutes.</h2>
+        <p>Do this once on each desktop.</p>
+      </div>
+
+      <div class="steps">
+        <!-- Step 1 -->
+        <article class="step">
+          <div>
+            <span class="step-num"><i>1</i>Step one</span>
+            <h3>Download the extension</h3>
+            <p>Click the button below. Your browser saves <code class="inline-code">sprintpulse-0.1.0.vsix</code> to your Downloads folder.</p>
+            <a class="btn btn-primary" data-vsix href="#download" download="sprintpulse-0.1.0.vsix" style="margin-top:6px"><svg width="20" height="20"><use href="#i-download"/></svg> Download &middot; 30 KB</a>
+            <div class="tip"><svg width="18" height="18"><use href="#i-bulb"/></svg><span>Moving this page to a new desktop? Copy just this HTML file. The extension is built in.</span></div>
+          </div>
+          <div class="visual" aria-hidden="true">
+            <div style="display:grid;gap:16px;justify-items:center">
+              <div style="display:flex;align-items:center;gap:16px;background:#fff;border-radius:18px;padding:18px 22px 18px 18px;box-shadow:0 20px 40px -18px rgba(60,30,140,.35),0 0 0 1px #ebe6fb;min-width:300px">
+                <span class="vsix-icon" style="width:44px;height:52px;font-size:10px">VSIX</span>
+                <div style="flex:1"><b style="display:block;font-size:15px">sprintpulse-0.1.0.vsix</b><span style="color:var(--muted);font-size:13px">30 KB &middot; Downloads</span>
+                  <div style="height:5px;border-radius:3px;background:#efeaff;margin-top:10px;overflow:hidden"><i style="display:block;height:100%;width:100%;background:linear-gradient(90deg,#8b5cf6,#6d3cf0)"></i></div></div>
+                <span class="tick" style="width:30px;height:30px"><svg width="15" height="15"><use href="#i-check"/></svg></span>
+              </div>
+              <span style="font-size:13px;color:#6c5fb0;font-weight:600">Download complete</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Step 2 -->
+        <article class="step">
+          <div>
+            <span class="step-num"><i>2</i>Step two</span>
+            <h3>Install from VSIX</h3>
+            <ol class="mini-list">
+              <li>Open the Extensions view: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd>.</li>
+              <li>Click the <b>&middot;&middot;&middot;</b> menu at the top.</li>
+              <li>Choose <b>Install from VSIX&hellip;</b> and pick the file.</li>
+            </ol>
+            <p style="margin-top:18px">Prefer the terminal? Run this from your Downloads folder.</p>
+            <div class="code">
+              <div class="code-top">
+                <div class="tabs" role="tablist" aria-label="Editor">
+                  <button class="tab" role="tab" aria-selected="true" aria-controls="cmd-kiro" id="tab-kiro">Kiro</button>
+                  <button class="tab" role="tab" aria-selected="false" aria-controls="cmd-code" id="tab-code" tabindex="-1">VS Code</button>
+                </div>
+                <button class="copy" type="button" data-copy-active><svg width="14" height="14"><use href="#i-copy"/></svg><span>Copy</span></button>
+              </div>
+              <pre id="cmd-kiro" role="tabpanel" aria-labelledby="tab-kiro"><span class="prompt">&gt; </span><span class="cmd">kiro --install-extension sprintpulse-0.1.0.vsix</span></pre>
+              <pre id="cmd-code" role="tabpanel" aria-labelledby="tab-code" hidden><span class="prompt">&gt; </span><span class="cmd">code --install-extension sprintpulse-0.1.0.vsix</span></pre>
+            </div>
+            <div class="tip"><svg width="18" height="18"><use href="#i-bulb"/></svg><span>Can&rsquo;t find the menu? Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and run <b>Extensions: Install from VSIX&hellip;</b></span></div>
+          </div>
+          <div class="visual" aria-hidden="true">
+            <div class="mini" style="height:300px">
+              <div class="mini-head">EXTENSIONS
+                <span class="icons"><svg width="16" height="16"><use href="#i-filter"/></svg><svg width="16" height="16"><use href="#i-refresh"/></svg><svg class="on" width="16" height="16"><use href="#i-more"/></svg></span>
+              </div>
+              <div class="mini-search">Search Extensions in Marketplace</div>
+              <div class="ext-row"><span class="ico"></span><div><div class="l1"></div><div class="l2"></div></div></div>
+              <div class="ext-row"><span class="ico"></span><div><div class="l1" style="width:45%"></div><div class="l2"></div></div></div>
+              <div class="ext-row"><span class="ico"></span><div><div class="l1" style="width:52%"></div><div class="l2" style="width:70%"></div></div></div>
+              <div class="menu">
+                <div>Views <svg width="12" height="12"><use href="#i-chev-right"/></svg></div>
+                <hr />
+                <div>Check for Extension Updates</div>
+                <div>Enable All Extensions</div>
+                <div>Disable All Extensions</div>
+                <hr />
+                <div class="hl">Install from VSIX&hellip;</div>
+              </div>
+              <svg class="cursor" width="22" height="22"><use href="#i-pointer"/></svg>
+            </div>
+          </div>
+        </article>
+
+        <!-- Step 3 -->
+        <article class="step">
+          <div>
+            <span class="step-num"><i>3</i>Step three</span>
+            <h3>Reload and find the rocket</h3>
+            <p>Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and run <b>Developer: Reload Window</b>.</p>
+            <p>A rocket icon appears in the activity bar on the left. Click it to open SprintTrackerNest.</p>
+          </div>
+          <div class="visual alt" aria-hidden="true">
+            <div class="reload-row">
+              <div class="act-strip">
+                <span><svg width="22" height="22"><use href="#i-files"/></svg></span>
+                <span><svg width="22" height="22"><use href="#i-search"/></svg></span>
+                <span><svg width="22" height="22"><use href="#i-branch"/></svg></span>
+                <span><svg width="22" height="22"><use href="#i-ext"/></svg></span>
+                <span class="on"><svg width="22" height="22"><use href="#i-rocket"/></svg></span>
+              </div>
+              <div class="palette" style="max-width:330px">
+                <div class="field">&gt; Reload Window<span class="caret"></span></div>
+                <div class="opt hl"><span>Developer: Reload Window</span></div>
+                <div class="opt"><span>Developer: Reload With Extensions Disabled</span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Step 4 -->
+        <article class="step">
+          <div>
+            <span class="step-num"><i>4</i>Step four</span>
+            <h3>Connect Jira</h3>
+            <p>In the <b>Settings</b> view, click <b>Connect Jira</b>. Three prompts appear at the top of the window.</p>
+            <ol class="mini-list">
+              <li>Pick your Jira site.</li>
+              <li>Type your Atlassian email.</li>
+              <li>Paste your API token.</li>
+            </ol>
+            <p>No token yet? <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank" rel="noopener noreferrer">Create one in your Atlassian account</a>.</p>
+            <div class="tip"><svg width="18" height="18"><use href="#i-shield"/></svg><span>Your token is checked with Jira first. A wrong token is never saved. <a href="#security">Where does it go?</a></span></div>
+          </div>
+          <div class="visual" aria-hidden="true">
+            <div class="stack">
+              <div class="stack-label"><b>1</b>Site</div>
+              <div class="palette">
+                <div class="title">Jira site URL</div>
+                <div class="field"><span class="ph">Select your Jira site</span></div>
+                <div class="opt hl"><span>https://infor.atlassian.net</span></div>
+                <div class="opt"><span>Enter a different site&hellip;</span></div>
+              </div>
+              <div class="stack-label"><b>2</b>Email</div>
+              <div class="palette">
+                <div class="field">ernestbyrron.flores@infor.com</div>
+                <div class="hint">Atlassian account email (Press &lsquo;Enter&rsquo; to confirm)</div>
+              </div>
+              <div class="stack-label"><b>3</b>API token</div>
+              <div class="palette">
+                <div class="field"><span class="dots">&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</span><span class="caret"></span></div>
+                <div class="hint">Jira API token (Press &lsquo;Enter&rsquo; to confirm)</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Step 5 -->
+        <article class="step">
+          <div>
+            <span class="step-num"><i>5</i>Step five</span>
+            <h3>Set your scrum board</h3>
+            <p>Open your board in Jira. The board ID is the number at the end of the URL.</p>
+            <p>Back in the editor, click <b>Set Scrum Board</b> and enter that number.</p>
+            <div class="tip warn"><svg width="18" height="18"><use href="#i-alert"/></svg><span>Connect Jira first. The board prompt only works once you are connected.</span></div>
+          </div>
+          <div class="visual cool" aria-hidden="true">
+            <div class="stack">
+              <div class="browser">
+                <div class="browser-top"><span class="lights"><i></i><i></i><i></i></span><span class="url">infor.atlassian.net/jira/&hellip;/HRT/boards/<mark>4069</mark></span></div>
+                <div class="browser-body"><div></div><div></div><div></div></div>
+              </div>
+              <span class="arrow-down"><svg width="26" height="26"><use href="#i-arrow-down"/></svg></span>
+              <div class="palette">
+                <div class="field">4069<span class="caret"></span></div>
+                <div class="hint">Jira board ID (Press &lsquo;Enter&rsquo; to confirm)</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Step 6 -->
+        <article class="step">
+          <div>
+            <span class="step-num"><i>6</i>Step six</span>
+            <h3>You&rsquo;re live</h3>
+            <p>The sidebar fills in with your sprint, your tickets, and a health badge.</p>
+            <p>The status bar shows a one-line summary. It stays visible even with the sidebar closed.</p>
+            <a class="btn btn-ghost" href="#tour" style="margin-top:8px">Take the tour <svg width="18" height="18"><use href="#i-arrow"/></svg></a>
+          </div>
+          <div class="visual alt" aria-hidden="true">
+            <div class="stack" style="gap:22px">
+              <div class="toast"><svg class="i" width="20" height="20"><use href="#i-info"/></svg><div>SprintTrackerNest: connected to Jira as Ernest Byrron Flores.<small>Source: SprintTrackerNest</small></div><svg width="14" height="14" style="color:#9d9d9d;margin-top:2px"><use href="#i-x"/></svg></div>
+              <div class="k-status" style="width:100%;max-width:420px;border-radius:8px;box-shadow:0 18px 40px -14px rgba(114,52,212,.6)">
+                <div><span><svg width="14" height="14"><use href="#i-remote"/></svg></span><span class="hud">&#x1F3C3; HRT Apr27 3A | 1d left | &#x1F534;</span></div>
+                <div><span><svg width="14" height="14"><use href="#i-bell"/></svg></span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SECURITY ================= -->
+  <section class="block dark" id="security">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Your API token</p>
+        <h2>Your token goes to SecretStorage. Nowhere else.</h2>
+        <p>SecretStorage is the editor&rsquo;s built-in vault for passwords and tokens. Your operating system encrypts it.</p>
+      </div>
+
+      <div class="flow">
+        <div class="node">
+          <span class="ic"><svg width="22" height="22"><use href="#i-key"/></svg></span>
+          <h4>1. You paste it</h4>
+          <p>The prompt hides what you type. The token is never shown on screen.</p>
+        </div>
+        <span class="link" aria-hidden="true"><svg width="26" height="26"><use href="#i-arrow"/></svg></span>
+        <div class="node">
+          <span class="ic"><svg width="22" height="22"><use href="#i-cloud"/></svg></span>
+          <h4>2. Jira checks it</h4>
+          <p>One HTTPS call to your Jira site confirms who you are. If it fails, nothing is saved.</p>
+        </div>
+        <span class="link" aria-hidden="true"><svg width="26" height="26"><use href="#i-arrow"/></svg></span>
+        <div class="node vault">
+          <span class="ic"><svg width="22" height="22"><use href="#i-lock"/></svg></span>
+          <h4>3. SecretStorage keeps it</h4>
+          <p>Encrypted with keys your OS protects.</p>
+          <div class="os"><span>Windows: DPAPI</span><span>macOS: Keychain</span><span>Linux: keyring</span></div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">What</th><th scope="col">Stored in</th><th scope="col">Encrypted</th><th scope="col">Sent anywhere?</th></tr></thead>
+          <tbody>
+            <tr><td><b>API token</b></td><td>SecretStorage</td><td><span class="pill lock"><svg width="13" height="13"><use href="#i-lock"/></svg>Yes, by the OS</span></td><td>Only to your Jira site, over HTTPS</td></tr>
+            <tr><td><b>Site URL, email, display name</b></td><td>Extension state (globalState)</td><td><span class="pill plain">No, not secret</span></td><td>No</td></tr>
+            <tr><td><b>Board ID, project key</b></td><td>Extension state (globalState)</td><td><span class="pill plain">No, not secret</span></td><td>No</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="never">
+        <span>The token is never in:</span>
+        <span class="chip"><svg width="14" height="14"><use href="#i-x"/></svg>settings.json</span>
+        <span class="chip"><svg width="14" height="14"><use href="#i-x"/></svg>Log files</span>
+        <span class="chip"><svg width="14" height="14"><use href="#i-x"/></svg>The .vsix file</span>
+        <span class="chip"><svg width="14" height="14"><use href="#i-x"/></svg>Git or this page</span>
+      </div>
+
+      <div class="callout">
+        <span class="ic"><svg width="20" height="20"><use href="#i-monitor"/></svg></span>
+        <p><b>Why connect again on each desktop?</b> SecretStorage belongs to one user on one machine. Settings Sync does not copy it. <b>Disconnect Jira</b> wipes the token and all saved values.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TOUR ================= -->
+  <section class="block" id="tour">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Tour</p>
+        <h2>Everything at a glance.</h2>
+        <p>This is the sidebar once you are connected. Each number matches a note on the right.</p>
+      </div>
+
+      <div class="tour">
+        <div class="k-ide" role="img" aria-label="Mockup of the editor with the SprintTrackerNest sidebar open">
+          <div class="k-title">
+            <span class="k-logo"><svg width="14" height="14"><use href="#i-ghost"/></svg></span>
+            <span class="k-menus"><span>File</span><span>Edit</span><span>Selection</span><span>View</span><span>Go</span><span>Run</span><span>&middot;&middot;&middot;</span></span>
+            <span class="k-cmd"><svg width="13" height="13"><use href="#i-search"/></svg>SprintTrackerNest</span>
+            <span></span>
+            <span class="k-win"><span><svg width="12" height="12" viewBox="0 0 12 12"><path d="M1 6h10" stroke="currentColor"/></svg></span><span><svg width="12" height="12" viewBox="0 0 12 12"><rect x="1.5" y="1.5" width="9" height="9" fill="none" stroke="currentColor"/></svg></span><span><svg width="12" height="12"><use href="#i-x"/></svg></span></span>
+          </div>
+
+          <div class="k-body">
+            <nav class="k-act">
+              <span><svg width="24" height="24"><use href="#i-files"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-search"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-branch"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-ext"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-ghost"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-tree"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-zap"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-bulb"/></svg></span>
+              <span class="on"><svg width="24" height="24"><use href="#i-rocket"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-more"/></svg></span>
+              <span class="spacer"></span>
+              <span class="badge"><svg width="26" height="26"><use href="#i-user"/></svg></span>
+              <span><svg width="24" height="24"><use href="#i-gear"/></svg></span>
+            </nav>
+
+            <aside class="k-sidebar">
+              <div class="k-sb-title">SPRINTTRACKERNEST <svg width="16" height="16"><use href="#i-more"/></svg></div>
+
+              <div class="k-view">
+                <div class="k-view-head"><span><svg width="16" height="16"><use href="#i-chev-down"/></svg>CURRENT SPRINT</span><svg width="16" height="16"><use href="#i-refresh"/></svg></div>
+                <div class="k-card">
+                  <span class="pin" style="top:15px;left:150px">1</span>
+                  <span class="k-chip">HRT Apr27 3A</span>
+                  <div class="k-big" style="position:relative"><b>1</b><span>business day left</span><span class="pin" style="top:6px;right:0">2</span></div>
+                  <div class="k-label">TIMELINE <em>91%</em></div>
+                  <div class="k-bar"><i style="width:91%"></i></div>
+                  <div class="k-rows">
+                    <div><span>Starts</span><b>Oct 9, 2026, 12:02 PM PHT</b></div>
+                    <div><span>Ends</span><b>Oct 23, 2026, 12:30 PM PHT</b></div>
+                  </div>
+                </div>
+                <div class="k-card k-health"><span class="k-badge">&#x1F534; At Risk</span><span class="pin" style="top:50%;margin-top:-12px;right:46px">3</span><svg class="k-info" width="18" height="18"><use href="#i-info"/></svg></div>
+              </div>
+
+              <div class="k-view">
+                <div class="k-view-head"><span><svg width="16" height="16"><use href="#i-chev-down"/></svg>JIRA TICKETS</span><svg width="16" height="16"><use href="#i-refresh"/></svg></div>
+                <div class="k-label k-tickets-head" style="position:relative">YOUR TICKETS <em>43% (6 / 14)</em></div>
+                <div class="k-bar k-tickets-bar"><i style="width:43%"></i></div>
+                <div class="k-card" style="padding:8px 16px">
+                  <span class="pin" style="top:10px;right:12px">4</span>
+                  <div class="k-group">
+                    <div class="k-group-head"><svg width="14" height="14"><use href="#i-chev-down"/></svg>To Do <small>(2)</small></div>
+                    <div class="k-ticket"><code>HRT-132448</code><span>WorkAssignment future-dated rows</span></div>
+                    <div class="k-ticket"><code>HRT-132447</code><span>Employee future-dated changes</span></div>
+                  </div>
+                  <div class="k-group">
+                    <div class="k-group-head"><svg width="14" height="14"><use href="#i-chev-down"/></svg>In Progress <small>(4)</small></div>
+                    <div class="k-ticket"><code>HRT-131902</code><span>Timecard rounding on split shifts</span></div>
+                    <div class="k-ticket"><code>HRT-131877</code><span>Pay rule export validation</span></div>
+                  </div>
+                  <div class="k-group"><div class="k-group-head"><svg width="14" height="14"><use href="#i-chev-right"/></svg>In Review <small>(2)</small></div></div>
+                  <div class="k-group"><div class="k-group-head"><svg width="14" height="14"><use href="#i-chev-right"/></svg>Done <small>(6)</small></div></div>
+                </div>
+              </div>
+
+              <div class="k-view">
+                <div class="k-view-head"><span><svg width="16" height="16"><use href="#i-chev-down"/></svg>SETTINGS</span></div>
+                <div class="k-card k-account">
+                  <span class="pin" style="top:12px;right:12px">5</span>
+                  <span class="k-avatar">EF</span>
+                  <div>
+                    <b>Ernest Byrron Flores</b>
+                    <span class="k-verified"><svg width="16" height="16"><use href="#i-verified"/></svg>Jira connected and authenticated</span>
+                    <small>Last synced: Oct 22, 2026, 1:39 PM</small>
+                  </div>
+                </div>
+                <p class="k-desc">Choose which scrum board this sprint HUD tracks.</p>
+                <span class="k-btn secondary">Change Scrum Board</span>
+                <span class="k-btn primary">Disconnect Jira</span>
+              </div>
+            </aside>
+
+            <section class="k-editor">
+              <div class="k-tabs">
+                <span class="k-tab on"><span class="ts">LPL</span>Employee.busclass</span>
+                <span class="k-tab"><span class="ts">LPL</span>Position.busclass</span>
+              </div>
+<div class="k-code"><span class="ln">1</span><span class="t-t">Employee</span> <span class="t-k">is a</span> <span class="t-t">BusinessClass</span>
+<span class="ln">2</span>  <span class="t-k">owned by</span> <span class="t-v">hr</span>
+<span class="ln">3</span>  <span class="t-k">prefix is</span> <span class="t-s">EMP</span>
+<span class="ln">4</span>
+<span class="ln">5</span>  <span class="t-b">Ontology</span>
+<span class="ln">6</span>    <span class="t-k">symbolic key is</span> <span class="t-t">Employee</span>
+<span class="ln">7</span>
+<span class="ln">8</span>  <span class="t-c">// Core employee data</span>
+<span class="ln">9</span>  <span class="t-b">Persistent Fields</span>
+<span class="ln">10</span>    <span class="t-v">Name</span>        <span class="t-k">is a</span> <span class="t-t">Name</span>
+<span class="ln">11</span>    <span class="t-v">HireDate</span>    <span class="t-k">is</span> <span class="t-t">Date</span>
+<span class="ln">12</span>    <span class="t-v">Position</span>    <span class="t-k">is a</span> <span class="t-t">Position</span>
+<span class="ln">13</span>    <span class="t-v">Status</span>      <span class="t-k">is</span> <span class="t-t">AlphaUpper</span> <span class="t-k">size</span> <span class="t-f">1</span>
+</div>
+            </section>
+          </div>
+
+          <footer class="k-status">
+            <div>
+              <span><svg width="14" height="14"><use href="#i-remote"/></svg></span>
+              <span><svg width="14" height="14"><use href="#i-rocket"/></svg>Launchpad</span>
+              <span class="hud">&#x1F3C3; HRT Apr27 3A | 1d left | &#x1F534;<span class="pin" style="top:1px;right:-32px">6</span></span>
+            </div>
+            <div>
+              <span class="opt">Ln 12, Col 4</span>
+              <span class="opt">UTF-8</span>
+              <span class="opt">TypeScript</span>
+              <span><svg width="14" height="14"><use href="#i-bell"/></svg></span>
+            </div>
+          </footer>
+        </div>
+
+        <ol class="legend">
+          <li><span class="n">1</span><div><b>Active sprint</b><span>Picked from your scrum board automatically.</span></div></li>
+          <li><span class="n">2</span><div><b>Business days left</b><span>Weekends don&rsquo;t count. The bar shows how much of the sprint has passed.</span></div></li>
+          <li><span class="n">3</span><div><b>Health badge</b><span>Compares tickets done with time passed. Click &#9432; for details.</span></div></li>
+          <li><span class="n">4</span><div><b>Your tickets</b><span>Only tickets assigned to you, grouped by the board&rsquo;s real columns.</span></div></li>
+          <li><span class="n">5</span><div><b>Account and sync</b><span>Who is connected and when data last refreshed.</span></div></li>
+          <li><span class="n">6</span><div><b>Status bar summary</b><span>Always visible. Click it to open or close the sidebar.</span></div></li>
+        </ol>
+      </div>
+
+      <div class="health-grid">
+        <div class="hcard"><span class="sw green"><i></i>Ahead of Schedule</span><p>Tickets lead the timeline by 10 points or more.</p></div>
+        <div class="hcard"><span class="sw green"><i></i>On Track</span><p>Tickets and timeline are within 10 points.</p></div>
+        <div class="hcard"><span class="sw yellow"><i></i>Behind Schedule</span><p>Tickets trail the timeline by 10 to 24 points.</p></div>
+        <div class="hcard"><span class="sw red"><i></i>At Risk</span><p>Tickets trail by 25 points or more. Example: 43% done, 91% of time gone.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HELP ================= -->
+  <section class="block" id="help" style="padding-top:24px">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Help</p>
+        <h2>Updates and fixes.</h2>
+      </div>
+      <div class="help-grid">
+        <div class="panel">
+          <h3>Updating to a new version</h3>
+          <p>Install the new .vsix the same way as step 2. It replaces the old version.</p>
+          <p>Your Jira connection and board ID stay in place. No need to reconnect.</p>
+          <div class="tip" style="margin-top:20px"><svg width="18" height="18"><use href="#i-shield"/></svg><span>Check the file is intact (optional). Run <code class="inline-code">Get-FileHash .\sprintpulse-0.1.0.vsix</code> in PowerShell. It should start with <code class="inline-code">5D46FE797A8F</code>.</span></div>
+        </div>
+        <div class="panel">
+          <details open>
+            <summary>No rocket icon after install<span class="plus"><svg width="14" height="14"><use href="#i-plus"/></svg></span></summary>
+            <div><p>Run <b>Developer: Reload Window</b>. Then open the Extensions view and check that SprintTrackerNest is listed and enabled.</p></div>
+          </details>
+          <details>
+            <summary>&ldquo;Could not connect to Jira&rdquo;<span class="plus"><svg width="14" height="14"><use href="#i-plus"/></svg></span></summary>
+            <div><p>Check that the email matches your Atlassian account. Tokens can expire, so create a new one if needed.</p><p>On a company network, connect to the VPN first.</p></div>
+          </details>
+          <details>
+            <summary>&ldquo;Connect to Jira first, then set a board ID&rdquo;<span class="plus"><svg width="14" height="14"><use href="#i-plus"/></svg></span></summary>
+            <div><p>Do step 4 before step 5. The board ID must be a whole number, like 4069.</p></div>
+          </details>
+          <details>
+            <summary>Status bar says &ldquo;needs refresh&rdquo;<span class="plus"><svg width="14" height="14"><use href="#i-plus"/></svg></span></summary>
+            <div><p>The last automatic update failed, so you are seeing older data. Click the refresh icon in the Current Sprint view. Check your network if it keeps happening.</p></div>
+          </details>
+          <details>
+            <summary>The terminal says &ldquo;command not found&rdquo;<span class="plus"><svg width="14" height="14"><use href="#i-plus"/></svg></span></summary>
+            <div><p>The editor&rsquo;s shell command isn&rsquo;t on your PATH. Use the <b>Install from VSIX&hellip;</b> menu instead. It does the same thing.</p></div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>SprintTrackerNest v0.1.0</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    // Turn the embedded data: URI into a Blob URL so every download button
+    // shares one copy and large-file download limits never apply.
+    var primary = document.getElementById("download");
+    var buttons = document.querySelectorAll("[data-vsix]");
+    try {
+      var b64 = primary.getAttribute("href").split(",")[1];
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var url = URL.createObjectURL(new Blob([bytes], { type: "application/octet-stream" }));
+      buttons.forEach(function (b) { b.setAttribute("href", url); });
+    } catch (e) {
+      // Fallback: secondary buttons scroll to the primary data: link.
+    }
+
+    // Tabs (Kiro / VS Code) with arrow-key support.
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    function select(tab) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+      tab.focus();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener("click", function () { select(t); });
+      t.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight") select(tabs[(i + 1) % tabs.length]);
+        if (e.key === "ArrowLeft") select(tabs[(i - 1 + tabs.length) % tabs.length]);
+      });
+    });
+
+    // Copy the visible command.
+    var copyBtn = document.querySelector("[data-copy-active]");
+    copyBtn.addEventListener("click", function () {
+      var panel = document.querySelector('[role="tabpanel"]:not([hidden]) .cmd');
+      var text = panel.textContent;
+      var done = function () {
+        copyBtn.classList.add("copied");
+        copyBtn.querySelector("span").textContent = "Copied";
+        setTimeout(function () { copyBtn.classList.remove("copied"); copyBtn.querySelector("span").textContent = "Copy"; }, 1600);
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done);
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done(); } finally { ta.remove(); }
+      }
+    });
+  })();
+</script>
+</body>
+</html>
